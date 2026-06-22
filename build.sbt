@@ -1,0 +1,78 @@
+import Dependencies.*
+
+ThisBuild / organization := "net.nmoncho"
+
+addCommandAlias(
+  "testCoverage",
+  "; clean ; coverage; test; +scripted; coverageAggregate; coverageReport; coverageOff"
+)
+
+addCommandAlias(
+  "styleFix",
+  "; scalafmtSbt; +scalafmtAll; +headerCreateAll; scalafixAll"
+)
+
+addCommandAlias(
+  "styleCheck",
+  "; +scalafmtCheckAll; +headerCheckAll; scalafixAll --check"
+)
+
+lazy val root = (project in file("."))
+  .enablePlugins(SbtPlugin)
+  .settings(
+    name := "sbt-osv",
+    startYear := Some(2025),
+    homepage := Some(url("https://github.com/nMoncho/sbt-osv")),
+    licenses := Seq("MIT License" -> url("http://opensource.org/licenses/MIT")),
+    headerLicense := Some(
+      HeaderLicense.MIT("2026", "the original author or authors", HeaderLicenseStyle.SpdxSyntax)
+    ),
+    sbtPluginPublishLegacyMavenStyle := false,
+    developers := List(
+      Developer(
+        "nMoncho",
+        "Gustavo De Micheli",
+        "gustavo.demicheli@gmail.com",
+        url("https://github.com/nMoncho")
+      )
+    ),
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision,
+    scalacOptions := (Opts.compile.encoding("UTF-8") :+
+      Opts.compile.deprecation :+
+      Opts.compile.unchecked :+
+      "-feature" :+
+      "-Ywarn-unused"),
+    libraryDependencies ++= Seq(
+      cvssCalculator,
+      requests,
+      uPickle,
+      munit           % Test,
+      munitScalaCheck % Test,
+      log4jSf4jImpl   % Test,
+      mockito         % Test
+    ),
+    addSbtPlugin("com.github.sbt" % "sbt2-compat" % "0.1.0"),
+    pluginCrossBuild / sbtVersion := {
+      scalaBinaryVersion.value match {
+        // set minimum sbt version so we have `sbtPluginPublishLegacyMavenStyle`
+        // and to be able to use glob expressions on scripted tests due to
+        // SBT 1.x and 2.x target files being on different paths
+        case "2.12" => "1.10.7"
+        case "3" => "2.0.0"
+      }
+    },
+    javacOptions ++= {
+      scalaBinaryVersion.value match {
+        case "2.12" => Seq("-source", "11", "-target", "11")
+        case "3" => Seq("-source", "17", "-target", "17")
+      }
+    },
+    crossScalaVersions += "3.8.4",
+    scriptedLaunchOpts := {
+      scriptedLaunchOpts.value ++
+      Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
+    },
+    scriptedBufferLog := false,
+    Test / testOptions += Tests.Argument("-F") // Show full stack trace
+  )

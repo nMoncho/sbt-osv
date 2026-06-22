@@ -1,0 +1,61 @@
+/*
+ * Copyright 2025 the original author or authors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+package net.nmoncho.sbt.osv.tasks
+
+import net.nmoncho.sbt.osv.Keys.osvSkip
+import sbt.*
+import sbt.Keys.*
+import sbt.plugins.JvmPlugin
+
+/** Lists Suppression Rules that are added to the Owasp Engine by defining them on
+  * the project definition (ie. `build.sbt`) or imported as packaged suppressions rules.
+  *
+  * The goal of this task is to make visible to users what suppressions are being added
+  * by the SBT plugin but not through the usual DependencyCheck configuration (e.g. properties file)
+  */
+object ListSuppressions {
+
+  def apply(): Def.Initialize[InputTask[Unit]] = Def.inputTaskDyn {
+    implicit val log: Logger = streams.value.log
+
+    Def.task {
+      val rules = projectSelectionParser.parsed match {
+        case Some(ProjectSelection.AllProjects) =>
+          Seq(name.value -> AllProjectsScan.suppressions().tag(NonParallel).value)
+
+        case Some(ProjectSelection.PerProject) | _ =>
+          suppressionRulesFilter.tag(NonParallel).value.sortBy { case (name, _) => name }
+      }
+
+      rules.foreach { case (name, rules) =>
+        if (rules.nonEmpty) {
+          log.info(s"Suppression rules added for [$name]")
+          rules.foreach(rule => log.info(s"\t$rule"))
+          log.info("\n\n")
+        } else {
+          log.info(s"No suppression rules added for [$name]")
+          log.info("\n\n")
+        }
+      }
+    } tag NonParallel
+  }
+
+  private lazy val suppressionRulesFilter = Def.settingDyn {
+    suppressionRulesTask
+      .all(ScopeFilter(inAggregates(thisProjectRef.value), inConfigurations(Compile)))
+  }
+
+  private lazy val suppressionRulesTask: Def.Initialize[Task[(String, Set[String])]] =
+    Def.taskDyn {
+      if (
+        !thisProject.value.autoPlugins.contains(JvmPlugin) || (osvSkip ?? false).value
+      )
+        Def.task(name.value -> Set.empty)
+      else
+        Def.task(name.value -> GenerateSuppressions.forProject.value)
+    }
+}
