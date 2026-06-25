@@ -21,7 +21,7 @@ object SuppressionParser {
     * @param file file to parse
     * @return parsed suppressions rules
     */
-  def parse(file: File): Set[SuppressionRule] = {
+  def parse(file: File): Set[SuppressionRule] = if (file.exists()) {
     val (parsed, errors) = parseLines(sbt.IO.read(file).lines().iterator().asScala)
 
     if (errors.nonEmpty) {
@@ -33,6 +33,8 @@ object SuppressionParser {
     }
 
     parsed.toSet
+  } else {
+    Set.empty
   }
 
   /** Writes a suppression file with specified rules

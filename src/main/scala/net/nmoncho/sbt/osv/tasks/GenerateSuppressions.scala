@@ -29,13 +29,14 @@ object GenerateSuppressions {
           val settings             = osvSuppressions.value
           val dependencies         = AllProjectsScan.dependencies().value
 
+          val suppressions                 = SuppressionParser.parse(settings.file)
           val buildSuppressions            = settings.suppressions
           val importedPackagedSuppressions = collectImportedPackagedSuppressions(
             settings,
             dependencies
           )
 
-          (buildSuppressions ++ importedPackagedSuppressions).toSet
+          (suppressions ++ buildSuppressions ++ importedPackagedSuppressions).toSet
         }
     }
 
@@ -74,14 +75,16 @@ object GenerateSuppressions {
     * @return a sequence of files if packaged suppressions are enabled, empty otherwise.
     */
   def exportPackagedSuppressions(): Def.Initialize[Task[Seq[File]]] = Def.taskDyn {
-    implicit val log: Logger     = streams.value.log
+    implicit val log: Logger = streams.value.log
+
+    val source                   = projectID.value.toString()
     val settings                 = osvSuppressions.value
     val packagedSuppressionsFile =
       (Compile / resourceManaged).value / SuppressionSettings.DefaultSuppressionsFilename
 
     if (settings.packagedEnabled) {
       Def.task {
-        val generated = writeExportSuppressions(packagedSuppressionsFile, settings)
+        val generated = writeExportSuppressions(packagedSuppressionsFile, settings, source)
 
         if (generated) {
           Seq(packagedSuppressionsFile)
@@ -105,12 +108,18 @@ object GenerateSuppressions {
     *
     * @param file file to write to
     * @param settings rules settings, including files and
+    * @param source rules's source
     * @return true if a file was generated, false if there was not suppression rule to write to the file
     */
-  private[tasks] def writeExportSuppressions(file: File, settings: SuppressionSettings)(
+  private[tasks] def writeExportSuppressions(
+      file: File,
+      settings: SuppressionSettings,
+      source: String
+  )(
       implicit log: Logger
   ): Boolean = {
     val buildSuppressions = settings.suppressions
+
     val suppressionsFiles = if (settings.file.exists()) {
       log.debug(s"Including suppressions rules from [${file.name}]")
       parseSuppressionFile(settings.file)
@@ -119,7 +128,13 @@ object GenerateSuppressions {
       Seq.empty
     }
 
-    val rules = buildSuppressions ++ suppressionsFiles
+    val rules = (buildSuppressions ++ suppressionsFiles).map { rule =>
+      if (rule.source.trim.isBlank) {
+        rule.copy(source = source)
+      } else {
+        rule
+      }
+    }
 
     if (rules.nonEmpty) {
       log.info(

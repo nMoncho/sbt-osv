@@ -124,6 +124,8 @@ package object tasks {
       .sortBy(_.coordinates)
       .foreach(d => log.info(s"\t ${d.coordinates} (${d.file.getName})"))
 
+    log.info(s"Adding [${suppressionRules.size}] suppression rules to scan")
+
     val result = engine.analyzeDependencies(failCvssScore, deps, suppressionRules)
 
     if (reportFormats.isEmpty) {
