@@ -17,7 +17,7 @@ class ClientSpec extends munit.FunSuite with TestUtils {
   implicit val log: Logger = Logger.Null
 
   test("query vulnerabilities for a single package") {
-    val client = new v1.Client()
+    val client = v1.Client()
 
     val result = client.query(
       V1Query.of("org.scala-sbt" % "sbt" % "1.11.7")
@@ -34,7 +34,7 @@ class ClientSpec extends munit.FunSuite with TestUtils {
   }
 
   test("query vulnerabilities for a multiple packages") {
-    val client = new v1.Client()
+    val client = v1.Client()
 
     val query = V1BatchQuery.of(
       "com.github.t3hnar"         % "scala-bcrypt_2.10"    % "2.6",

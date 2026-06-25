@@ -41,7 +41,8 @@ object Engine {
   )
 
   class Default(settings: EngineSettings, db: ConnectionProvider) extends Engine {
-    private val client          = new Client(settings.baseUrl)
+    private val client = Client(settings.baseUrl)
+
     private lazy val repository = {
       val connection = db.connection()
       ConnectionProvider.createSchema(connection)

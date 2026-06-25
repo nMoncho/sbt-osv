@@ -308,10 +308,8 @@ class SuppressionParserSpec extends FunSuite {
     }
   }
 
-  test("parseFile – throws for a non-existent file") {
-    intercept[java.io.FileNotFoundException] {
-      SuppressionParser.parse(new java.io.File("/no/such/file/suppression.txt"))
-    }
+  test("parseFile – returns empty for a non-existent file") {
+    assert(SuppressionParser.parse(new java.io.File("/no/such/file/suppression.txt")).isEmpty)
   }
 
   // -------------------------------------------------------------------------

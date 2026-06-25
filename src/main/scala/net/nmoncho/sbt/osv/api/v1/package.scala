@@ -21,7 +21,7 @@ package object v1 {
 
   // TODO handle pagination
 
-  class Client(baseUrl: String = "https://api.osv.dev") {
+  class Client private (baseUrl: String) {
 
     /** Queries the vulnerabilities for a given package
       *
@@ -91,5 +91,10 @@ package object v1 {
             )
           )
       }
+  }
+
+  object Client {
+    def apply(baseUrl: String = "https://api.osv.dev"): Client =
+      new Client(if (baseUrl.endsWith("/")) baseUrl.substring(0, baseUrl.length - 1) else baseUrl)
   }
 }
