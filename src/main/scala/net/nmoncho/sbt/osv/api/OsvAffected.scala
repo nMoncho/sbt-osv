@@ -1,9 +1,23 @@
+/*
+ * Copyright 2026 the original author or authors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
 package net.nmoncho.sbt.osv.api
 
-import upickle.default.{macroRW, ReadWriter as RW}
+import SnakeCaseConfig.macroRW
+import SnakeCaseConfig.{ ReadWriter => RW }
 
+/** Affected versions and commits.
+  *
+  * @param `package` Package information.
+  * @param ranges Range information.
+  * @param versions List of affected versions.
+  * @param severity Severity of the vulnerability for this package.
+  */
 case class OsvAffected(
-    `package`: Option[OsvPackage]      = None,
+    `package`: OsvPackage,
     ranges: Option[Seq[OsvRange]]      = None,
     versions: Option[Seq[String]]      = None,
     severity: Option[Seq[OsvSeverity]] = None

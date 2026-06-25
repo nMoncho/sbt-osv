@@ -1,8 +1,16 @@
+/*
+ * Copyright 2026 the original author or authors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
 package net.nmoncho.sbt
 
 import java.io.PrintWriter
 import java.io.StringWriter
+
 import scala.util.Using
+
 import sbt.Logger
 
 package object osv {
@@ -28,6 +36,7 @@ package object osv {
       log.error(sw.toString)
     }
 
-  def failingVulnerability(v: Vulnerability, failCvssScore: Double): Boolean = ???
+  def failingVulnerability(v: Vulnerability, failCvssScore: Double): Boolean =
+    v.scores.exists(_.score > failCvssScore)
 
 }

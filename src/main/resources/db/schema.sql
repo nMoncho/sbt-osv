@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS osv_vulnerability_related (
 );
 
 CREATE TABLE IF NOT EXISTS osv_reference (
-    id               BIGINT       NOT NULL AUTO_INCREMENT,
+    id               SERIAL       NOT NULL,
     vulnerability_id VARCHAR(255) NOT NULL,
     type             VARCHAR(50),
     url              VARCHAR(2048),
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS osv_reference (
 
 -- OsvAffected embeds OsvPackage (1:1 relationship, inlined as columns)
 CREATE TABLE IF NOT EXISTS osv_affected (
-    id                BIGINT       NOT NULL AUTO_INCREMENT,
+    id                SERIAL       NOT NULL,
     vulnerability_id  VARCHAR(255) NOT NULL,
     package_name      VARCHAR(500),
     package_ecosystem VARCHAR(100),
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS osv_affected_version (
 
 -- OsvSeverity belongs to either a vulnerability or an affected entry
 CREATE TABLE IF NOT EXISTS osv_severity (
-    id               BIGINT       NOT NULL AUTO_INCREMENT,
+    id               SERIAL       NOT NULL,
     vulnerability_id VARCHAR(255),
     affected_id      BIGINT,
     type             VARCHAR(50),
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS osv_severity (
 );
 
 CREATE TABLE IF NOT EXISTS osv_range (
-    id          BIGINT       NOT NULL AUTO_INCREMENT,
+    id          SERIAL       NOT NULL,
     affected_id BIGINT       NOT NULL,
     type        VARCHAR(50),
     repo        VARCHAR(2048),
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS osv_range (
 );
 
 CREATE TABLE IF NOT EXISTS osv_event (
-    id             BIGINT       NOT NULL AUTO_INCREMENT,
+    id             SERIAL       NOT NULL,
     range_id       BIGINT       NOT NULL,
     introduced     VARCHAR(255),
     fixed          VARCHAR(255),
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS osv_event (
 );
 
 CREATE TABLE IF NOT EXISTS osv_credit (
-    id               BIGINT       NOT NULL AUTO_INCREMENT,
+    id               SERIAL       NOT NULL,
     vulnerability_id VARCHAR(255) NOT NULL,
     name             VARCHAR(500),
     type             VARCHAR(50),
@@ -108,6 +108,30 @@ CREATE TABLE IF NOT EXISTS osv_credit_contact (
         REFERENCES osv_credit (id) ON DELETE CASCADE
 );
 
+-- Tracks API queries and their results for cache freshness decisions.
+-- queried_at is set automatically by the DB on insert and updated on re-cache.
+CREATE TABLE IF NOT EXISTS osv_queries (
+    id                SERIAL        NOT NULL,
+    commit            VARCHAR(255),
+    version           VARCHAR(255),
+    package_name      VARCHAR(500),
+    package_ecosystem VARCHAR(100),
+    package_purl      VARCHAR(1000),
+    queried_at        TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_osv_queries PRIMARY KEY (id)
+);
+
+-- Join table linking a cached query to the vulnerabilities it returned.
+CREATE TABLE IF NOT EXISTS osv_query_result (
+    query_id         BIGINT       NOT NULL,
+    vulnerability_id VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_osv_query_result PRIMARY KEY (query_id, vulnerability_id),
+    CONSTRAINT fk_qr_query FOREIGN KEY (query_id)
+        REFERENCES osv_queries (id) ON DELETE CASCADE,
+    CONSTRAINT fk_qr_vuln FOREIGN KEY (vulnerability_id)
+        REFERENCES osv_vulnerability (id) ON DELETE CASCADE
+);
+
 -- Indexes for common query patterns
 CREATE INDEX IF NOT EXISTS idx_vuln_modified         ON osv_vulnerability (modified);
 CREATE INDEX IF NOT EXISTS idx_affected_vuln         ON osv_affected (vulnerability_id);
@@ -120,3 +144,5 @@ CREATE INDEX IF NOT EXISTS idx_reference_vuln        ON osv_reference (vulnerabi
 CREATE INDEX IF NOT EXISTS idx_credit_vuln           ON osv_credit (vulnerability_id);
 CREATE INDEX IF NOT EXISTS idx_alias_vuln            ON osv_vulnerability_alias (vulnerability_id);
 CREATE INDEX IF NOT EXISTS idx_related_vuln          ON osv_vulnerability_related (vulnerability_id);
+CREATE INDEX IF NOT EXISTS idx_queries_queried_at    ON osv_queries (queried_at);
+CREATE INDEX IF NOT EXISTS idx_qr_vuln               ON osv_query_result (vulnerability_id);

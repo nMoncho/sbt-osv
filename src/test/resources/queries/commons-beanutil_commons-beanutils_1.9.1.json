@@ -1,0 +1,1115 @@
+{
+  "vulns": [
+    {
+      "id": "GHSA-6phf-73q6-gh87",
+      "summary": "Insecure Deserialization in Apache Commons Beanutils",
+      "details": "In Apache Commons Beanutils 1.9.2, a special BeanIntrospector class was added which allows suppressing the ability for an attacker to access the classloader via the class property available on all Java objects. We, however were not using this by default characteristic of the PropertyUtilsBean.",
+      "aliases": [
+        "CVE-2019-10086"
+      ],
+      "modified": "2026-02-04T04:11:29.385039Z",
+      "published": "2020-06-15T20:36:17Z",
+      "related": [
+        "CGA-5qmc-vxrj-v4ww"
+      ],
+      "database_specific": {
+        "cwe_ids": [
+          "CWE-502"
+        ],
+        "nvd_published_at": "2019-08-20T21:15:00Z",
+        "severity": "HIGH",
+        "github_reviewed": true,
+        "github_reviewed_at": "2020-06-11T15:08:49Z"
+      },
+      "references": [
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2019-10086"
+        },
+        {
+          "type": "WEB",
+          "url": "https://access.redhat.com/errata/RHSA-2019:4317"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/ra41fd0ad4b7e1d675c03a5081a16a6603085a4e37d30b866067566fe@%3Cissues.nifi.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/ra87ac17410a62e813cba901fdd4e9a674dd53daaf714870f28e905f1@%3Cdev.atlas.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/ra9a139fdc0999750dcd519e81384bc1fe3946f311b1796221205f51c@%3Ccommits.dolphinscheduler.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/racd3e7b2149fa2f255f016bd6bffab0fea77b6fb81c50db9a17f78e6@%3Cdev.atlas.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/rae81e0c8ebdf47ffaa85a01240836bfece8a990c48f55c7933162b5c@%3Cdev.atlas.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/rb1f76c2c0a4d6efb8a3523974f9d085d5838b73e7bffdf9a8f212997@%3Cissues.nifi.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/rb8dac04cb7e9cc5dedee8dabaa1c92614f590642e5ebf02a145915ba@%3Ccommits.atlas.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/rcc029be4edaaf5b8bb85818aab494e16f312fced07a0f4a202771ba2@%3Cissues.nifi.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/rd2d2493f4f1af6980d265b8d84c857e2b7ab80a46e1423710c448957@%3Cissues.nifi.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/re2028d4d76ba1db3e3c3a722d6c6034e801cc3b309f69cc166eaa32b@%3Ccommits.nifi.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/re3cd7cb641d7fc6684e4fc3c336a8bad4a01434bb5625a06e3600fd1@%3Cissues.nifi.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/rec74f3a94dd850259c730b4ba6f7b6211222b58900ec088754aa0534@%3Cissues.nifi.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/reee57101464cf7622d640ae013b2162eb864f603ec4093de8240bb8f@%3Cdev.atlas.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.debian.org/debian-lts-announce/2019/08/msg00030.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4APPGLBWMFAS4WHNLR4LIJ65DJGPV7TF"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/JIUYSL2RSIWZVNSUIXJTIFPIPIF6OAIO"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com//security-alerts/cpujul2021.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com/security-alerts/cpuApr2021.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com/security-alerts/cpuapr2020.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com/security-alerts/cpuapr2022.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com/security-alerts/cpujan2020.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com/security-alerts/cpujan2021.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com/security-alerts/cpujan2022.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com/security-alerts/cpujul2020.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com/security-alerts/cpujul2022.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com/security-alerts/cpuoct2021.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://access.redhat.com/errata/RHSA-2020:0057"
+        },
+        {
+          "type": "WEB",
+          "url": "https://access.redhat.com/errata/RHSA-2020:0194"
+        },
+        {
+          "type": "WEB",
+          "url": "https://access.redhat.com/errata/RHSA-2020:0804"
+        },
+        {
+          "type": "WEB",
+          "url": "https://access.redhat.com/errata/RHSA-2020:0805"
+        },
+        {
+          "type": "WEB",
+          "url": "https://access.redhat.com/errata/RHSA-2020:0806"
+        },
+        {
+          "type": "WEB",
+          "url": "https://access.redhat.com/errata/RHSA-2020:0811"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/apache/commons-beanutils"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/02094ad226dbc17a2368beaf27e61d8b1432f5baf77d0ca995bb78bc@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/1f78f1e32cc5614ec0c5b822ba4bd7fc8e8b5c46c8e038b6bd609cb5@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/2fd61dc89df9aeab738d2b49f48d42c76f7d53b980ba04e1d48bce48@%3Cdev.shiro.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/3d1ed1a1596c08c4d5fea97b36c651ce167b773f1afc75251ce7a125@%3Ccommits.tinkerpop.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/519eb0fd45642dcecd9ff74cb3e71c20a4753f7d82e2f07864b5108f@%3Cdev.drill.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/5261066cd7adee081ee05c8bf0e96cf0b2eeaced391e19117ae4daa6@%3Cdev.shiro.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/956995acee0d8bc046f1df0a55b7fbeb65dd2f82864e5de1078bacb0@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/a684107d3a78e431cf0fbb90629e8559a36ff8fe94c3a76e620b39fa@%3Cdev.shiro.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/b0656d359c7d40ec9f39c8cc61bca66802ef9a2a12ee199f5b0c1442@%3Cdev.drill.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/c94bc9649d5109a663b2129371dc45753fbdeacd340105548bbe93c3@%3Cdev.shiro.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/d6ca9439c53374b597f33b7ec180001625597db48ea30356af01145f@%3Cdev.shiro.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/f9bc3e55f4e28d1dcd1a69aae6d53e609a758e34d2869b4d798e13cc@%3Cissues.drill.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r18d8b4f9263e5cad3bbaef0cdba0e2ccdf9201316ac4b85e23eb7ee4@%3Cdev.atlas.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r2d5f1d88c39bd615271abda63964a0bee9b2b57fef1f84cb4c43032e@%3Cissues.nifi.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r306c0322aa5c0da731e03f3ce9f07f4745c052c6b73f4e78faf232ca@%3Cdev.atlas.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r43de02fd4a4f52c4bdeff8c02f09625d83cd047498009c1cdab857db@%3Cdev.rocketmq.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r46e536fc98942dce99fadd2e313aeefe90c1a769c5cd85d98df9d098@%3Cissues.nifi.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r513a7a21c422170318115463b399dd58ab447fe0990b13e5884f0825@%3Ccommits.dolphinscheduler.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r6194ced4828deb32023cd314e31f41c61d388b58935d102c7de91f58@%3Cdev.atlas.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r967953a14e05016bc4bcae9ef3dd92e770181158b4246976ed8295c9@%3Cdev.brooklyn.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "http://lists.opensuse.org/opensuse-security-announce/2019-09/msg00007.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://mail-archives.apache.org/mod_mbox/www-announce/201908.mbox/%3cC628798F-315D-4428-8CB1-4ED1ECC958E4@apache.org%3e"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "commons-beanutils:commons-beanutils",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/commons-beanutils/commons-beanutils"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "1.9.4"
+                }
+              ]
+            }
+          ],
+          "versions": [
+            "1.0",
+            "1.2",
+            "1.3",
+            "1.4",
+            "1.4.1",
+            "1.5",
+            "1.6",
+            "1.6.1",
+            "1.7.0",
+            "1.8.0",
+            "1.8.0-BETA",
+            "1.8.1",
+            "1.8.2",
+            "1.8.3",
+            "1.9.0",
+            "1.9.1",
+            "1.9.2",
+            "1.9.3"
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2020/06/GHSA-6phf-73q6-gh87/GHSA-6phf-73q6-gh87.json"
+          }
+        }
+      ],
+      "schema_version": "1.7.3",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:L"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-p66x-2cv9-qq3v",
+      "summary": "Arbitrary code execution in Apache Commons BeanUtils",
+      "details": "Apache Commons BeanUtils, as distributed in lib/commons-beanutils-1.8.0.jar in Apache Struts 1.x through 1.3.10 and in other products requiring commons-beanutils through 1.9.2, does not suppress the class property, which allows remote attackers to \"manipulate\" the ClassLoader and execute arbitrary code via the class parameter, as demonstrated by the passing of this parameter to the getClass method of the ActionForm object in Struts 1.",
+      "aliases": [
+        "CVE-2014-0114"
+      ],
+      "modified": "2024-12-01T05:31:59.449737Z",
+      "published": "2020-06-10T23:38:01Z",
+      "database_specific": {
+        "cwe_ids": [
+          "CWE-20"
+        ],
+        "nvd_published_at": "2014-04-30T10:49:00Z",
+        "severity": "HIGH",
+        "github_reviewed": true,
+        "github_reviewed_at": "2020-06-10T23:37:42Z"
+      },
+      "references": [
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2014-0114"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/apache/commons-beanutils/pull/7"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/apache/commons-beanutils/commit/62e82ad92cf4818709d6044aaf257b73d42659a4"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/aa4ca069c7aea5b1d7329bc21576c44a39bcc4eb7bb2760c4b16f2f6%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/aa4ca069c7aea5b1d7329bc21576c44a39bcc4eb7bb2760c4b16f2f6@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/b0656d359c7d40ec9f39c8cc61bca66802ef9a2a12ee199f5b0c1442%40%3Cdev.drill.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/b0656d359c7d40ec9f39c8cc61bca66802ef9a2a12ee199f5b0c1442@%3Cdev.drill.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/c24c0b931632a397142882ba248b7bd440027960f22845c6f664c639%40%3Ccommits.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/c24c0b931632a397142882ba248b7bd440027960f22845c6f664c639@%3Ccommits.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/c70da3cb6e3f03e0ad8013e38b6959419d866c4a7c80fdd34b73f25c%40%3Ccommits.pulsar.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/c70da3cb6e3f03e0ad8013e38b6959419d866c4a7c80fdd34b73f25c@%3Ccommits.pulsar.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/c7e31c3c90b292e0bafccc4e1b19c9afc1503a65d82cb7833dfd7478%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/c7e31c3c90b292e0bafccc4e1b19c9afc1503a65d82cb7833dfd7478@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/cee6b1c4533be1a753614f6a7d7c533c42091e7cafd7053b8f62792a%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/cee6b1c4533be1a753614f6a7d7c533c42091e7cafd7053b8f62792a@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/d27c51b3c933f885460aa6d3004eb228916615caaaddbb8e8bfeeb40%40%3Cgitbox.activemq.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/d27c51b3c933f885460aa6d3004eb228916615caaaddbb8e8bfeeb40@%3Cgitbox.activemq.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com/technetwork/security-advisory/cpujul2019-5072835.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/9b5505632f5683ee17bda4f7878525e672226c7807d57709283ffa64@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/9b5505632f5683ee17bda4f7878525e672226c7807d57709283ffa64%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/97fc033dad4233a5d82fcb75521eabdd23dd99ef32eb96f407f96a1a@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/97fc033dad4233a5d82fcb75521eabdd23dd99ef32eb96f407f96a1a%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/956995acee0d8bc046f1df0a55b7fbeb65dd2f82864e5de1078bacb0@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/956995acee0d8bc046f1df0a55b7fbeb65dd2f82864e5de1078bacb0%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/9317fd092b257a0815434b116a8af8daea6e920b6673f4fd5583d5fe@%3Ccommits.druid.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/9317fd092b257a0815434b116a8af8daea6e920b6673f4fd5583d5fe%40%3Ccommits.druid.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/918ec15a80fc766ff46c5d769cb8efc88fed6674faadd61a7105166b@%3Cannounce.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/918ec15a80fc766ff46c5d769cb8efc88fed6674faadd61a7105166b%40%3Cannounce.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/8e2bdfabd5b14836aa3cf900aa0a62ff9f4e22a518bb4e553ebcf55f@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/8e2bdfabd5b14836aa3cf900aa0a62ff9f4e22a518bb4e553ebcf55f%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/88c497eead24ed517a2bb3159d3dc48725c215e97fe7a98b2cf3ea25@%3Cdev.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/88c497eead24ed517a2bb3159d3dc48725c215e97fe7a98b2cf3ea25%40%3Cdev.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com/technetwork/security-advisory/cpujan2019-5072801.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.oracle.com/technetwork/security-advisory/cpuapr2019-5072813.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://web.archive.org/web/20150710065242/http://www.securityfocus.com/archive/1/534161/100/0/threaded"
+        },
+        {
+          "type": "WEB",
+          "url": "https://web.archive.org/web/20140618110851/http://www.securityfocus.com/bid/67121"
+        },
+        {
+          "type": "WEB",
+          "url": "https://snyk.io/vuln/SNYK-JAVA-COMMONSBEANUTILS-30077"
+        },
+        {
+          "type": "WEB",
+          "url": "https://security.netapp.com/advisory/ntap-20180629-0006"
+        },
+        {
+          "type": "WEB",
+          "url": "https://security.netapp.com/advisory/ntap-20140911-0001"
+        },
+        {
+          "type": "WEB",
+          "url": "https://security.gentoo.org/glsa/201607-09"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/rf5230a049d989dbfdd404b4320a265dceeeba459a4d04ec21873bd55%40%3Csolr-user.lucene.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r75d67108e557bb5d4c4318435067714a0180de525314b7e8dab9d04e@%3Cissues.activemq.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r75d67108e557bb5d4c4318435067714a0180de525314b7e8dab9d04e%40%3Cissues.activemq.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r458d61eaeadecaad04382ebe583230bc027f48d9e85e4731bc573477%40%3Ccommits.dolphinscheduler.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r204ba2a9ea750f38d789d2bb429cc0925ad6133deea7cbc3001d96b5@%3Csolr-user.lucene.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/r204ba2a9ea750f38d789d2bb429cc0925ad6133deea7cbc3001d96b5%40%3Csolr-user.lucene.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/ffde3f266d3bde190b54c9202169e7918a92de7e7e0337d792dc7263@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/ffde3f266d3bde190b54c9202169e7918a92de7e7e0337d792dc7263%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/fda473f46e51019a78ab217a7a3a3d48dafd90846e75bd5536ef72f3@%3Cnotifications.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/fda473f46e51019a78ab217a7a3a3d48dafd90846e75bd5536ef72f3%40%3Cnotifications.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/f9bc3e55f4e28d1dcd1a69aae6d53e609a758e34d2869b4d798e13cc@%3Cissues.drill.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/f9bc3e55f4e28d1dcd1a69aae6d53e609a758e34d2869b4d798e13cc%40%3Cissues.drill.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/f3682772e62926b5c009eed63c62767021be6da0bb7427610751809f@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/f3682772e62926b5c009eed63c62767021be6da0bb7427610751809f%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/ebc4f019798f6ce2a39f3e0c26a9068563a9ba092cdf3ece398d4e2f@%3Cnotifications.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/ebc4f019798f6ce2a39f3e0c26a9068563a9ba092cdf3ece398d4e2f%40%3Cnotifications.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/df1c385f2112edffeff57a6b21d12e8d24031a9f578cb8ba22a947a8@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/df1c385f2112edffeff57a6b21d12e8d24031a9f578cb8ba22a947a8%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/df093c662b5e49fe9e38ef91f78ffab09d0839dea7df69a747dffa86@%3Cdev.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/df093c662b5e49fe9e38ef91f78ffab09d0839dea7df69a747dffa86%40%3Cdev.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/2454e058fd05ba30ca29442fdeb7ea47505d47a888fbc9f3a53f31d0%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/1f78f1e32cc5614ec0c5b822ba4bd7fc8e8b5c46c8e038b6bd609cb5@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/1f78f1e32cc5614ec0c5b822ba4bd7fc8e8b5c46c8e038b6bd609cb5%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/15fcdf27fa060de276edc0b4098526afc21c236852eb3de9be9594f3@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/15fcdf27fa060de276edc0b4098526afc21c236852eb3de9be9594f3%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/1565e8b786dff4cb3b48ecc8381222c462c92076c9e41408158797b5@%3Ccommits.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/1565e8b786dff4cb3b48ecc8381222c462c92076c9e41408158797b5%40%3Ccommits.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/0efed939139f5b9dcd62b8acf7cb8a9789227d14abdc0c6f141c4a4c@%3Cissues.activemq.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/0efed939139f5b9dcd62b8acf7cb8a9789227d14abdc0c6f141c4a4c%40%3Cissues.activemq.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/0a35108a56e2d575e3b3985588794e39fbf264097aba66f4c5569e4f@%3Cuser.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/0a35108a56e2d575e3b3985588794e39fbf264097aba66f4c5569e4f%40%3Cuser.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/09981ae3df188a2ad1ce20f62ef76a5b2d27cf6b9ebab366cf1d6cc6@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/09981ae3df188a2ad1ce20f62ef76a5b2d27cf6b9ebab366cf1d6cc6%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/098e9aae118ac5c06998a9ba4544ab2475162981d290fdef88e6f883@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/098e9aae118ac5c06998a9ba4544ab2475162981d290fdef88e6f883%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/084ae814e69178d2ce174cfdf149bc6e46d7524f3308c08d3adb43cb@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/084ae814e69178d2ce174cfdf149bc6e46d7524f3308c08d3adb43cb%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/080af531a9113e29d3f6a060e3f992dc9f40315ec7234e15c3b339e3@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/080af531a9113e29d3f6a060e3f992dc9f40315ec7234e15c3b339e3%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/0340493a1ddf3660dee09a5c503449cdac5bec48cdc478de65858859@%3Cdev.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/0340493a1ddf3660dee09a5c503449cdac5bec48cdc478de65858859%40%3Cdev.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://issues.apache.org/jira/browse/BEANUTILS-463"
+        },
+        {
+          "type": "WEB",
+          "url": "https://h20566.www2.hpe.com/portal/site/hpsc/public/kb/docDisplay?docId=emr_na-c05324755"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/apache/commons-beanutils"
+        },
+        {
+          "type": "WEB",
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=1116665"
+        },
+        {
+          "type": "WEB",
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=1091938"
+        },
+        {
+          "type": "WEB",
+          "url": "https://access.redhat.com/solutions/869353"
+        },
+        {
+          "type": "WEB",
+          "url": "https://access.redhat.com/errata/RHSA-2019:2995"
+        },
+        {
+          "type": "WEB",
+          "url": "https://access.redhat.com/errata/RHSA-2018:2669"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/869c08899f34c1a70c9fb42f92ac0d043c98781317e0c19d7ba3f5e3@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/869c08899f34c1a70c9fb42f92ac0d043c98781317e0c19d7ba3f5e3%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/708d94141126eac03011144a971a6411fcac16d9c248d1d535a39451@%3Csolr-user.lucene.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/708d94141126eac03011144a971a6411fcac16d9c248d1d535a39451%40%3Csolr-user.lucene.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/6b30629b32d020c40d537f00b004d281c37528d471de15ca8aec2cd4@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/6b30629b32d020c40d537f00b004d281c37528d471de15ca8aec2cd4%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/6afe2f935493e69a332b9c5a4f23cafe95c15ede1591a492cf612293@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/6afe2f935493e69a332b9c5a4f23cafe95c15ede1591a492cf612293%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/66176fa3caeca77058d9f5b0316419a43b4c3fa2b572e05b87132226@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/66176fa3caeca77058d9f5b0316419a43b4c3fa2b572e05b87132226%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/65b39fa6d700e511927e5668a4038127432178a210aff81500eb36e5@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/65b39fa6d700e511927e5668a4038127432178a210aff81500eb36e5%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/519eb0fd45642dcecd9ff74cb3e71c20a4753f7d82e2f07864b5108f@%3Cdev.drill.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/519eb0fd45642dcecd9ff74cb3e71c20a4753f7d82e2f07864b5108f%40%3Cdev.drill.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/4c3fd707a049bfe0577dba8fc9c4868ffcdabe68ad86586a0a49242e@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/4c3fd707a049bfe0577dba8fc9c4868ffcdabe68ad86586a0a49242e%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/42ad6326d62ea8453d0d0ce12eff39bbb7c5b4fca9639da007291346@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/42ad6326d62ea8453d0d0ce12eff39bbb7c5b4fca9639da007291346%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/40fc236a35801a535cd49cf1979dbeab034b833c63a284941bce5bf1@%3Cdev.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/40fc236a35801a535cd49cf1979dbeab034b833c63a284941bce5bf1%40%3Cdev.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/3f500972dceb48e3cb351f58565aecf6728b1ea7a69593af86c30b30@%3Cissues.activemq.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/3f500972dceb48e3cb351f58565aecf6728b1ea7a69593af86c30b30%40%3Cissues.activemq.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/37e1ed724a1b0e5d191d98c822c426670bdfde83804567131847d2a3@%3Cdevnull.infra.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/37e1ed724a1b0e5d191d98c822c426670bdfde83804567131847d2a3%40%3Cdevnull.infra.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/31f9dc2c9cb68e390634a4202f84b8569f64b6569bfcce46348fd9fd@%3Ccommits.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/31f9dc2c9cb68e390634a4202f84b8569f64b6569bfcce46348fd9fd%40%3Ccommits.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/2ba22f2e3de945039db735cf6cbf7f8be901ab2537337c7b1dd6a0f0@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/2ba22f2e3de945039db735cf6cbf7f8be901ab2537337c7b1dd6a0f0%40%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread.html/2454e058fd05ba30ca29442fdeb7ea47505d47a888fbc9f3a53f31d0@%3Cissues.commons.apache.org%3E"
+        },
+        {
+          "type": "WEB",
+          "url": "http://advisories.mageia.org/MGASA-2014-0219.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://apache-ignite-developers.2346864.n4.nabble.com/CVE-2014-0114-Apache-Ignite-is-vulnerable-to-existing-CVE-2014-0114-td31205.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://commons.apache.org/proper/commons-beanutils/javadocs/v1.9.2/RELEASE-NOTES.txt"
+        },
+        {
+          "type": "WEB",
+          "url": "http://lists.fedoraproject.org/pipermail/package-announce/2014-August/136958.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://marc.info/?l=bugtraq&m=140119284401582&w=2"
+        },
+        {
+          "type": "WEB",
+          "url": "http://marc.info/?l=bugtraq&m=140801096002766&w=2"
+        },
+        {
+          "type": "WEB",
+          "url": "http://marc.info/?l=bugtraq&m=141451023707502&w=2"
+        },
+        {
+          "type": "WEB",
+          "url": "http://openwall.com/lists/oss-security/2014/06/15/10"
+        },
+        {
+          "type": "WEB",
+          "url": "http://openwall.com/lists/oss-security/2014/07/08/1"
+        },
+        {
+          "type": "WEB",
+          "url": "http://seclists.org/fulldisclosure/2014/Dec/23"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21674128"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21674812"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21675266"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21675387"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21675689"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21675898"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21675972"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21676091"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21676110"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21676303"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21676375"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21676931"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg21677110"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www-01.ibm.com/support/docview.wss?uid=swg27042296"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.debian.org/security/2014/dsa-2940"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.ibm.com/support/docview.wss?uid=swg21675496"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.mandriva.com/security/advisories?name=MDVSA-2014:095"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.oracle.com/technetwork/security-advisory/cpujan2018-3236628.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.oracle.com/technetwork/security-advisory/cpujul2018-4258247.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.oracle.com/technetwork/security-advisory/cpuoct2016-2881722.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.oracle.com/technetwork/security-advisory/cpuoct2017-3236626.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.oracle.com/technetwork/security-advisory/cpuoct2018-4428296.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.oracle.com/technetwork/topics/security/cpujan2015-1972971.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.oracle.com/technetwork/topics/security/cpujul2014-1972956.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.oracle.com/technetwork/topics/security/cpuoct2014-1972960.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.vmware.com/security/advisories/VMSA-2014-0008.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.vmware.com/security/advisories/VMSA-2014-0012.html"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "commons-beanutils:commons-beanutils",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/commons-beanutils/commons-beanutils"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "1.8.0"
+                },
+                {
+                  "fixed": "1.9.4"
+                }
+              ]
+            }
+          ],
+          "versions": [
+            "1.8.0",
+            "1.8.1",
+            "1.8.2",
+            "1.8.3",
+            "1.9.0",
+            "1.9.1",
+            "1.9.2",
+            "1.9.3"
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2020/06/GHSA-p66x-2cv9-qq3v/GHSA-p66x-2cv9-qq3v.json"
+          }
+        }
+      ],
+      "schema_version": "1.7.3"
+    },
+    {
+      "id": "GHSA-wxr5-93ph-8wr9",
+      "summary": "Apache Commons Improper Access Control vulnerability",
+      "details": "Improper Access Control vulnerability in Apache Commons.\n\n\n\nA special BeanIntrospector class was added in version 1.9.2. This can be used to stop attackers from using the declared class property of Java enum objects to get access to the classloader. However this protection was not enabled by default. PropertyUtilsBean (and consequently BeanUtilsBean) now disallows declared class level property access by default.\n\n\n\n\n\nReleases 1.11.0 and 2.0.0-M2 address a potential security issue when accessing enum properties in an uncontrolled way. If an application using Commons BeanUtils passes property paths from an external source directly to the getProperty() method of PropertyUtilsBean, an attacker can access the enum’s class loader via the “declaredClass” property available on all Java “enum” objects. Accessing the enum’s “declaredClass” allows remote attackers to access the ClassLoader and execute arbitrary code. The same issue exists with PropertyUtilsBean.getNestedProperty().\nStarting in versions 1.11.0 and 2.0.0-M2 a special BeanIntrospector suppresses the “declaredClass” property. Note that this new BeanIntrospector is enabled by default, but you can disable it to regain the old behavior; see section 2.5 of the user's guide and the unit tests.\n\nThis issue affects Apache Commons BeanUtils 1.x before 1.11.0, and 2.x before 2.0.0-M2.Users of the artifact commons-beanutils:commons-beanutils\n\n 1.x are recommended to upgrade to version 1.11.0, which fixes the issue.\n\n\nUsers of the artifact org.apache.commons:commons-beanutils2\n\n 2.x are recommended to upgrade to version 2.0.0-M2, which fixes the issue.",
+      "aliases": [
+        "CVE-2025-48734"
+      ],
+      "modified": "2026-02-04T02:26:01.067608Z",
+      "published": "2025-05-28T15:34:34Z",
+      "related": [
+        "CGA-ccc8-656h-rc37"
+      ],
+      "database_specific": {
+        "cwe_ids": [
+          "CWE-284"
+        ],
+        "nvd_published_at": "2025-05-28T14:15:34Z",
+        "severity": "HIGH",
+        "github_reviewed": true,
+        "github_reviewed_at": "2025-05-28T17:37:18Z"
+      },
+      "references": [
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-48734"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/apache/commons-beanutils/commit/bd20740da25b69552ddef8523beec0837297eaf9"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/apache/commons-beanutils"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.apache.org/thread/s0hb3jkfj5f3ryx6c57zqtfohb0of1g9"
+        },
+        {
+          "type": "WEB",
+          "url": "https://lists.debian.org/debian-lts-announce/2025/06/msg00027.html"
+        },
+        {
+          "type": "WEB",
+          "url": "http://www.openwall.com/lists/oss-security/2025/05/28/6"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "commons-beanutils:commons-beanutils",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/commons-beanutils/commons-beanutils"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "1.0"
+                },
+                {
+                  "fixed": "1.11.0"
+                }
+              ]
+            }
+          ],
+          "versions": [
+            "1.0",
+            "1.10.0",
+            "1.10.1",
+            "1.2",
+            "1.3",
+            "1.4",
+            "1.4.1",
+            "1.5",
+            "1.6",
+            "1.6.1",
+            "1.7.0",
+            "1.8.0",
+            "1.8.0-BETA",
+            "1.8.1",
+            "1.8.2",
+            "1.8.3",
+            "1.9.0",
+            "1.9.1",
+            "1.9.2",
+            "1.9.3",
+            "1.9.4"
+          ],
+          "database_specific": {
+            "last_known_affected_version_range": "<= 1.10.1",
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2025/05/GHSA-wxr5-93ph-8wr9/GHSA-wxr5-93ph-8wr9.json"
+          }
+        },
+        {
+          "package": {
+            "name": "org.apache.commons:commons-beanutils2",
+            "ecosystem": "Maven",
+            "purl": "pkg:maven/org.apache.commons/commons-beanutils2"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "2.0.0-M1"
+                },
+                {
+                  "fixed": "2.0.0-M2"
+                }
+              ]
+            }
+          ],
+          "versions": [
+            "2.0.0-M1"
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2025/05/GHSA-wxr5-93ph-8wr9/GHSA-wxr5-93ph-8wr9.json"
+          }
+        }
+      ],
+      "schema_version": "1.7.3",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H"
+        }
+      ]
+    }
+  ]
+}

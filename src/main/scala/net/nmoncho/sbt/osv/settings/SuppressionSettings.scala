@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 the original author or authors
+ * Copyright 2026 the original author or authors
  *
  * SPDX-License-Identifier: MIT
  */
@@ -8,6 +8,7 @@ package net.nmoncho.sbt.osv.settings
 
 import scala.util.matching.Regex
 
+import net.nmoncho.sbt.osv.SuppressionRule
 import sbt.File
 import sbt.internal.util.Attributed
 
@@ -18,7 +19,7 @@ import sbt.internal.util.Attributed
   */
 case class SuppressionSettings(
     file: File,
-    suppressions: Set[String],
+    suppressions: Set[SuppressionRule],
     packagedEnabled: Boolean,
     packagedFilter: SuppressionSettings.PackagedFilter
 )
@@ -37,10 +38,10 @@ object SuppressionSettings {
   )
 
   def apply(
-      file: File                     = new File(DefaultSuppressionsFilename),
-      suppressions: Set[String]      = Set.empty,
-      packagedEnabled: Boolean       = Default.packagedEnabled,
-      packagedFilter: PackagedFilter = Default.packagedFilter
+      file: File                         = new File(DefaultSuppressionsFilename),
+      suppressions: Set[SuppressionRule] = Set.empty,
+      packagedEnabled: Boolean           = Default.packagedEnabled,
+      packagedFilter: PackagedFilter     = Default.packagedFilter
   ): SuppressionSettings =
     new SuppressionSettings(
       file,

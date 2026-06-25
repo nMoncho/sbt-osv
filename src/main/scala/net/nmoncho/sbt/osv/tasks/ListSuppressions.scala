@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 the original author or authors
+ * Copyright 2026 the original author or authors
  *
  * SPDX-License-Identifier: MIT
  */
@@ -7,8 +7,9 @@
 package net.nmoncho.sbt.osv.tasks
 
 import net.nmoncho.sbt.osv.Keys.osvSkip
-import sbt.*
-import sbt.Keys.*
+import net.nmoncho.sbt.osv.SuppressionRule
+import sbt.Keys._
+import sbt._
 import sbt.plugins.JvmPlugin
 
 /** Lists Suppression Rules that are added to the Owasp Engine by defining them on
@@ -22,26 +23,28 @@ object ListSuppressions {
   def apply(): Def.Initialize[InputTask[Unit]] = Def.inputTaskDyn {
     implicit val log: Logger = streams.value.log
 
-    Def.task {
-      val rules = projectSelectionParser.parsed match {
-        case Some(ProjectSelection.AllProjects) =>
-          Seq(name.value -> AllProjectsScan.suppressions().tag(NonParallel).value)
+    Def
+      .task {
+        val rules = projectSelectionParser.parsed match {
+          case Some(ProjectSelection.AllProjects) =>
+            Seq(name.value -> AllProjectsScan.suppressions().tag(NonParallel).value)
 
-        case Some(ProjectSelection.PerProject) | _ =>
-          suppressionRulesFilter.tag(NonParallel).value.sortBy { case (name, _) => name }
-      }
+          case Some(ProjectSelection.PerProject) | _ =>
+            suppressionRulesFilter.tag(NonParallel).value.sortBy { case (name, _) => name }
+        }
 
-      rules.foreach { case (name, rules) =>
-        if (rules.nonEmpty) {
-          log.info(s"Suppression rules added for [$name]")
-          rules.foreach(rule => log.info(s"\t$rule"))
-          log.info("\n\n")
-        } else {
-          log.info(s"No suppression rules added for [$name]")
-          log.info("\n\n")
+        rules.foreach { case (name, rules) =>
+          if (rules.nonEmpty) {
+            log.info(s"Suppression rules added for [$name]")
+            rules.foreach(rule => log.info(s"\t$rule"))
+            log.info("\n\n")
+          } else {
+            log.info(s"No suppression rules added for [$name]")
+            log.info("\n\n")
+          }
         }
       }
-    } tag NonParallel
+      .tag(NonParallel)
   }
 
   private lazy val suppressionRulesFilter = Def.settingDyn {
@@ -49,11 +52,9 @@ object ListSuppressions {
       .all(ScopeFilter(inAggregates(thisProjectRef.value), inConfigurations(Compile)))
   }
 
-  private lazy val suppressionRulesTask: Def.Initialize[Task[(String, Set[String])]] =
+  private lazy val suppressionRulesTask: Def.Initialize[Task[(String, Set[SuppressionRule])]] =
     Def.taskDyn {
-      if (
-        !thisProject.value.autoPlugins.contains(JvmPlugin) || (osvSkip ?? false).value
-      )
+      if (!thisProject.value.autoPlugins.contains(JvmPlugin) || (osvSkip ?? false).value)
         Def.task(name.value -> Set.empty)
       else
         Def.task(name.value -> GenerateSuppressions.forProject.value)

@@ -1,6 +1,13 @@
+/*
+ * Copyright 2026 the original author or authors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
 package net.nmoncho.sbt.osv.api
 
-import upickle.default.{ ReadWriter => RW, macroRW }
+import SnakeCaseConfig.macroRW
+import SnakeCaseConfig.{ ReadWriter => RW }
 
 case class RpcStatus(
     code: Option[Int]       = None,

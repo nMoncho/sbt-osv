@@ -1,18 +1,16 @@
 /*
- * Copyright 2025 the original author or authors
+ * Copyright 2026 the original author or authors
  *
  * SPDX-License-Identifier: MIT
  */
 
 package net.nmoncho.sbt.osv
 
-import net.nmoncho.sbt.osv.settings.*
-import net.nmoncho.sbt.osv.tasks.*
-import sbt.*
-import sbt.Keys.*
+import net.nmoncho.sbt.osv.settings._
+import net.nmoncho.sbt.osv.tasks._
+import sbt.Keys._
+import sbt._
 import sbt.plugins.JvmPlugin
-
-import java.text.Format
 
 object OsvPlugin extends AutoPlugin {
 
@@ -29,9 +27,8 @@ object OsvPlugin extends AutoPlugin {
     osvAnalysisTimeout := None,
     osvEngineSettings := EngineSettings.Default,
     osvSuppressions := SuppressionSettings.Default,
-    osvReportFormats := Seq.empty,
+    osvReportFormats := Seq(ReportGenerator.HTML),
     osvScopes := ScopesSettings.Default,
-    osvProxy := ProxySettings.Default,
     osvConnectionTimeout := None,
     osvConnectionReadTimeout := None
   )

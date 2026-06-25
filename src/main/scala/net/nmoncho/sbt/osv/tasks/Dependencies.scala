@@ -1,15 +1,16 @@
 /*
- * Copyright 2025 the original author or authors
+ * Copyright 2026 the original author or authors
  *
  * SPDX-License-Identifier: MIT
  */
 
 package net.nmoncho.sbt.osv.tasks
 
+import net.nmoncho.sbt.osv.Keys.osvScopes
+import net.nmoncho.sbt.osv.Keys.osvSkip
 import net.nmoncho.sbt.osv.OsvCompat
-import net.nmoncho.sbt.osv.Keys.{osvScopes, osvSkip}
-import sbt.*
-import sbt.Keys.*
+import sbt.Keys._
+import sbt._
 import sbt.internal.util.Attributed
 import sbt.plugins.JvmPlugin
 import xsbti.FileConverter
@@ -17,9 +18,7 @@ import xsbti.FileConverter
 object Dependencies {
 
   lazy val projectDependencies: Def.Initialize[Task[Set[Attributed[File]]]] = Def.taskDyn {
-    if (
-      !thisProject.value.autoPlugins.contains(JvmPlugin) || (osvSkip ?? false).value
-    ) {
+    if (!thisProject.value.autoPlugins.contains(JvmPlugin) || (osvSkip ?? false).value) {
       Def.task(Set.empty)
     } else {
       Def.task {

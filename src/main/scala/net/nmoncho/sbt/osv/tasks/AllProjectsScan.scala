@@ -1,12 +1,13 @@
 /*
- * Copyright 2025 the original author or authors
+ * Copyright 2026 the original author or authors
  *
  * SPDX-License-Identifier: MIT
  */
 
 package net.nmoncho.sbt.osv.tasks
 
-import sbt.*
+import net.nmoncho.sbt.osv.SuppressionRule
+import sbt._
 
 object AllProjectsScan {
 
@@ -16,7 +17,7 @@ object AllProjectsScan {
     dependenciesFilter.value.toSet.flatten
   }
 
-  def suppressions(): Def.Initialize[Task[Set[String]]] = Def.task {
+  def suppressions(): Def.Initialize[Task[Set[SuppressionRule]]] = Def.task {
     suppressionRulesFilter.value.flatten.toSet
   }
 

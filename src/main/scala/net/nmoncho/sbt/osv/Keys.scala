@@ -6,10 +6,10 @@
 
 package net.nmoncho.sbt.osv
 
-import net.nmoncho.sbt.osv.settings.*
-
 import java.time.Duration
-import sbt.*
+
+import net.nmoncho.sbt.osv.settings._
+import sbt._
 
 object Keys {
 
@@ -39,12 +39,8 @@ object Keys {
     "Combines a sequence of file paths, or URLs to the XML suppression files, with any hosted suppressions the analysis should be using. Suppressions are used to ignore false positives."
   )
 
-  lazy val osvReportFormats: SettingKey[Seq[ReportGenerator.Format]] = settingKey(
+  lazy val osvReportFormats: SettingKey[Seq[ReportGenerator]] = settingKey(
     "The report formats to be generated."
-  )
-
-  lazy val osvProxy: SettingKey[ProxySettings] = settingKey(
-    "Settings to use a Proxy. Honors System Properties like `https.proxyHost`, `https.proxyPort`, etc."
   )
 
   lazy val osvConnectionTimeout: SettingKey[Option[Duration]] = settingKey(

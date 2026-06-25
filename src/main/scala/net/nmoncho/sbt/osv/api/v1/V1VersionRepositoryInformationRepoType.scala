@@ -1,4 +1,10 @@
-package net.nmoncho.sbt.osv.api
+/*
+ * Copyright 2026 the original author or authors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+package net.nmoncho.sbt.osv.api.v1
 
 sealed trait V1VersionRepositoryInformationRepoType
 object V1VersionRepositoryInformationRepoType {

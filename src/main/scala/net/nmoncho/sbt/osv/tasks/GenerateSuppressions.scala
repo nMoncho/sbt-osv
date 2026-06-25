@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 the original author or authors
+ * Copyright 2026 the original author or authors
  *
  * SPDX-License-Identifier: MIT
  */
@@ -7,10 +7,11 @@
 package net.nmoncho.sbt.osv
 package tasks
 
-import net.nmoncho.sbt.osv.Keys.{osvSkip, osvSuppressions}
+import net.nmoncho.sbt.osv.Keys.osvSkip
+import net.nmoncho.sbt.osv.Keys.osvSuppressions
 import net.nmoncho.sbt.osv.settings.SuppressionSettings
-import sbt.*
-import sbt.Keys.*
+import sbt.Keys._
+import sbt._
 import sbt.plugins.JvmPlugin
 
 /** Generates the XML Suppression File containing suppressions specified
@@ -18,11 +19,9 @@ import sbt.plugins.JvmPlugin
   */
 object GenerateSuppressions {
 
-  lazy val forProject: Def.Initialize[Task[Set[String]]] =
+  lazy val forProject: Def.Initialize[Task[Set[SuppressionRule]]] =
     Def.taskDyn {
-      if (
-        !thisProject.value.autoPlugins.contains(JvmPlugin) || (osvSkip ?? false).value
-      )
+      if (!thisProject.value.autoPlugins.contains(JvmPlugin) || (osvSkip ?? false).value)
         Def.task(Set.empty)
       else
         Def.task {
@@ -47,13 +46,11 @@ object GenerateSuppressions {
   def collectImportedPackagedSuppressions(
       settings: SuppressionSettings,
       dependencies: Set[Attributed[File]]
-  )(implicit log: Logger): Seq[String] =
+  )(implicit log: Logger): Seq[SuppressionRule] =
     if (settings.packagedEnabled) {
       val allowedDependencies = dependencies.filter(settings.packagedFilter).toSeq
 
       IO.withTemporaryDirectory { tempDir =>
-        val parser = new SuppressionParser
-
         allowedDependencies.flatMap { dependency =>
           IO.unzip(
             dependency.data,
@@ -62,13 +59,13 @@ object GenerateSuppressions {
           ).flatMap { file =>
             log.debug(s"Extracting packaged suppressions file from JAR [${file.name}]")
 
-            parseSuppressionFile(parser, file)
+            parseSuppressionFile(file)
           }
         }
       }
     } else {
       log.debug("Packaged suppressions rules disabled, skipping...")
-      Seq.empty[String]
+      Seq.empty[SuppressionRule]
     }
 
   /** Creates a file containing [[SuppressionRule]]s defined in the [[net.nmoncho.sbt.dependencycheck.settings.SuppressionSettings.files]] field
@@ -79,7 +76,8 @@ object GenerateSuppressions {
   def exportPackagedSuppressions(): Def.Initialize[Task[Seq[File]]] = Def.taskDyn {
     implicit val log: Logger     = streams.value.log
     val settings                 = osvSuppressions.value
-    val packagedSuppressionsFile = (Compile / resourceManaged).value / SuppressionSettings.DefaultSuppressionsFilename
+    val packagedSuppressionsFile =
+      (Compile / resourceManaged).value / SuppressionSettings.DefaultSuppressionsFilename
 
     if (settings.packagedEnabled) {
       Def.task {
@@ -112,25 +110,23 @@ object GenerateSuppressions {
   private[tasks] def writeExportSuppressions(file: File, settings: SuppressionSettings)(
       implicit log: Logger
   ): Boolean = {
-    val parser = new SuppressionParser
-
     val buildSuppressions = settings.suppressions
     val suppressionsFiles = if (settings.file.exists()) {
       log.debug(s"Including suppressions rules from [${file.name}]")
-      parseSuppressionFile(parser, settings.file)
+      parseSuppressionFile(settings.file)
     } else {
       log.debug(s"Ignoring [${settings.file}] on packaged suppressions rules export process")
       Seq.empty
     }
 
-    val rules = (buildSuppressions ++ suppressionsFiles)
+    val rules = buildSuppressions ++ suppressionsFiles
 
     if (rules.nonEmpty) {
       log.info(
         s"Generating packaged suppression file to [${file.getAbsolutePath}]"
       )
 
-      parser.write(file, rules)
+      SuppressionParser.write(file, rules)
       true
     } else {
       log.info("No suppressions defined, skipping packaged suppression file generation...")
@@ -138,17 +134,17 @@ object GenerateSuppressions {
     }
   }
 
-  private[tasks] def parseSuppressionFile(parser: SuppressionParser, file: File)(
+  private[tasks] def parseSuppressionFile(file: File)(
       implicit log: Logger
-  ): Seq[String] =
+  ): Set[SuppressionRule] =
     try {
-      parser.parse(file)
+      SuppressionParser.parse(file)
     } catch {
       case t: Throwable =>
         log.warn(
           s"Failed parsing suppression rules from file [${file.name}], skipping file..."
         )
         logThrowable(t)
-        Seq.empty[String]
+        Set.empty[SuppressionRule]
     }
 }

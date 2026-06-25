@@ -1,6 +1,12 @@
+/*
+ * Copyright 2026 the original author or authors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
 package net.nmoncho.sbt.osv.api
 
-import upickle.default.ReadWriter as RW
+import SnakeCaseConfig.{ ReadWriter => RW }
 
 sealed trait OsvReferenceType
 object OsvReferenceType {
@@ -14,18 +20,18 @@ object OsvReferenceType {
   case object EVIDENCE extends OsvReferenceType
 
   def fromString(s: String): OsvReferenceType = s match {
-    case "NONE"     => NONE
-    case "WEB"      => WEB
+    case "NONE" => NONE
+    case "WEB" => WEB
     case "ADVISORY" => ADVISORY
-    case "REPORT"   => REPORT
-    case "FIX"      => FIX
-    case "PACKAGE"  => PACKAGE
-    case "ARTICLE"  => ARTICLE
+    case "REPORT" => REPORT
+    case "FIX" => FIX
+    case "PACKAGE" => PACKAGE
+    case "ARTICLE" => ARTICLE
     case "EVIDENCE" => EVIDENCE
-    case other      => throw new IllegalArgumentException(s"Unknown OsvReferenceType: $other")
+    case other => throw new IllegalArgumentException(s"Unknown OsvReferenceType: $other")
   }
 
-  implicit val rw: RW[OsvReferenceType] = upickle.default
+  implicit val rw: RW[OsvReferenceType] = SnakeCaseConfig
     .readwriter[String]
     .bimap(_.toString, fromString)
 }

@@ -1,14 +1,19 @@
+/*
+ * Copyright 2026 the original author or authors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
 package net.nmoncho.sbt.osv
 
-import net.nmoncho.sbt.osv.settings.{EngineSettings, ReportGenerator, SummaryReport}
-
-import scala.util.Failure
-import scala.util.Success
-import scala.util.Try
 import scala.util.control.NonFatal
+
+import net.nmoncho.sbt.osv.settings.EngineSettings
+import net.nmoncho.sbt.osv.settings.ReportGenerator
+import net.nmoncho.sbt.osv.settings.SummaryReport
 import sbt.Tags.Tag
-import sbt.*
-import sbt.complete.DefaultParsers.*
+import sbt._
+import sbt.complete.DefaultParsers._
 import sbt.complete.Parser
 import xsbti.FileConverter
 
@@ -106,31 +111,42 @@ package object tasks {
       projectName: String,
       engine: Engine,
       dependencies: Set[Attributed[File]],
-      suppressionRules: Set[String],
+      suppressionRules: Set[SuppressionRule],
       failCvssScore: Double,
       outputDir: File,
-      reportFormats: Seq[ReportGenerator.Format],
+      reportFormats: Seq[ReportGenerator],
       summaryReport: SummaryReport
-  )(implicit log: Logger): Unit = {
-    val result = engine.analyzeDependencies(getDependencies(dependencies), suppressionRules)
+  )(implicit log: Logger): Engine.ScanResult = {
+    val deps = getDependencies(dependencies)
+
+    log.info("Scanning following dependencies: ")
+    deps.toSeq
+      .sortBy(_.coordinates)
+      .foreach(d => log.info(s"\t ${d.coordinates} (${d.file.getName})"))
+
+    val result = engine.analyzeDependencies(failCvssScore, deps, suppressionRules)
 
     if (reportFormats.isEmpty) {
-      log.info("No Report Format was selected for the Dependency Check Analysis")
+      log.info("No Report Format was selected for the OSV Analysis")
     } else {
-      log.info(s"Writing Dependency Check reports to [${outputDir.getAbsolutePath}]")
+      log.info(s"Writing OSV reports to [${outputDir.getAbsolutePath}]")
       reportFormats.foreach(reportFormat =>
         engine.writeReports(
-          projectName,
+          reportFormat.reportName(projectName),
           outputDir,
-          reportFormat.name()
+          reportFormat.generate(result.vulnerabilities)
         )
       )
     }
 
     failOnFoundVulnerabilities(failCvssScore, result, projectName, summaryReport)
+
+    result
   }
 
-  private def getDependencies(checkClasspath: Set[Attributed[File]])(implicit log: Logger): Set[Dependency] =
+  private def getDependencies(
+      checkClasspath: Set[Attributed[File]]
+  )(implicit log: Logger): Set[Dependency] =
     checkClasspath.flatMap(attributed =>
       if (attributed.data != null) {
         import sbtcompat.PluginCompat._
@@ -152,21 +168,21 @@ package object tasks {
 
   private def failOnFoundVulnerabilities(
       failCvssScore: Double,
-      analysisResult: Map[Dependency, Set[Vulnerability]],
+      scanResult: Engine.ScanResult,
       name: String,
       summaryReport: SummaryReport
   )(implicit log: Logger): Unit = {
-    import scala.jdk.CollectionConverters.*
-
-    val hasFailingVulnerabilities = analysisResult.exists { case (dep, vulnerabilities) =>
-      vulnerabilities.exists(failingVulnerability(_, failCvssScore))
+    val hasFailingVulnerabilities = scanResult.vulnerabilities.exists {
+      case (dep, vulnerabilities) =>
+        vulnerabilities.exists(failingVulnerability(_, failCvssScore))
     }
 
     if (hasFailingVulnerabilities) {
-      SummaryReport.showSummary(name, analysisResult, failCvssScore, summaryReport)
+      SummaryReport.showSummary(name, scanResult.vulnerabilities, failCvssScore, summaryReport)
 
       throw new VulnerabilityFoundException(
-        s"Vulnerability with CVSS score higher than [$failCvssScore] found"
+        s"Vulnerability with CVSS score higher than [$failCvssScore] found",
+        scanResult
       )
     }
   }

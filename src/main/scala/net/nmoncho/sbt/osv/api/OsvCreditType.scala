@@ -1,6 +1,12 @@
+/*
+ * Copyright 2026 the original author or authors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
 package net.nmoncho.sbt.osv.api
 
-import upickle.default.ReadWriter as RW
+import SnakeCaseConfig.{ ReadWriter => RW }
 
 sealed trait OsvCreditType
 object OsvCreditType {
@@ -17,21 +23,21 @@ object OsvCreditType {
   case object SPONSOR extends OsvCreditType
 
   def fromString(s: String): OsvCreditType = s match {
-    case "UNSPECIFIED"           => UNSPECIFIED
-    case "OTHER"                 => OTHER
-    case "FINDER"                => FINDER
-    case "REPORTER"              => REPORTER
-    case "ANALYST"               => ANALYST
-    case "COORDINATOR"           => COORDINATOR
+    case "UNSPECIFIED" => UNSPECIFIED
+    case "OTHER" => OTHER
+    case "FINDER" => FINDER
+    case "REPORTER" => REPORTER
+    case "ANALYST" => ANALYST
+    case "COORDINATOR" => COORDINATOR
     case "REMEDIATION_DEVELOPER" => REMEDIATION_DEVELOPER
-    case "REMEDIATION_REVIEWER"  => REMEDIATION_REVIEWER
-    case "REMEDIATION_VERIFIER"  => REMEDIATION_VERIFIER
-    case "TOOL"                  => TOOL
-    case "SPONSOR"               => SPONSOR
-    case other                   => throw new IllegalArgumentException(s"Unknown OsvCreditType: $other")
+    case "REMEDIATION_REVIEWER" => REMEDIATION_REVIEWER
+    case "REMEDIATION_VERIFIER" => REMEDIATION_VERIFIER
+    case "TOOL" => TOOL
+    case "SPONSOR" => SPONSOR
+    case other => throw new IllegalArgumentException(s"Unknown OsvCreditType: $other")
   }
 
-  implicit val rw: RW[OsvCreditType] = upickle.default
+  implicit val rw: RW[OsvCreditType] = SnakeCaseConfig
     .readwriter[String]
     .bimap(_.toString, fromString)
 }

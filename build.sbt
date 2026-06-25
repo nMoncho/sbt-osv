@@ -18,7 +18,7 @@ addCommandAlias(
 )
 
 lazy val root = (project in file("."))
-  .enablePlugins(SbtPlugin)
+  .enablePlugins(SbtPlugin, SbtTwirl)
   .settings(
     name := "sbt-osv",
     startYear := Some(2025),
@@ -45,8 +45,10 @@ lazy val root = (project in file("."))
       "-Ywarn-unused"),
     libraryDependencies ++= Seq(
       cvssCalculator,
+      packageUrlJava,
       requests,
       uPickle,
+      h2,
       munit           % Test,
       munitScalaCheck % Test,
       log4jSf4jImpl   % Test,

@@ -1,10 +1,22 @@
+/*
+ * Copyright 2026 the original author or authors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
 package net.nmoncho.sbt.osv.api
 
-import upickle.default.{macroRW, ReadWriter as RW}
+import SnakeCaseConfig.macroRW
+import SnakeCaseConfig.{ ReadWriter => RW }
 
+/** Reference URL.
+  *
+  * @param `type` The type of the reference.
+  * @param url The URL.
+  */
 case class OsvReference(
-    `type`: Option[OsvReferenceType] = None,
-    url: Option[String]              = None
+    `type`: OsvReferenceType,
+    url: String
 )
 
 object OsvReference {
