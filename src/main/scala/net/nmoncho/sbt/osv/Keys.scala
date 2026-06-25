@@ -53,7 +53,10 @@ object Keys {
 
   // Tasks
   lazy val osvScan: InputKey[Unit] = inputKey(
-    "Runs dependency-check against the project and generates a report per sub project."
+    "Runs osv scan against the project and generates a report per sub project."
+  )
+  lazy val osvListSettings: InputKey[Unit] = inputKey(
+    "Runs osv against the project and generates a report per sub project."
   )
   lazy val osvListSuppressions: InputKey[Unit] = inputKey(
     "List suppression rules added to the Owasp Engine which are defined in the project definition (ie. build.sbt), or are imported packaged suppressions."

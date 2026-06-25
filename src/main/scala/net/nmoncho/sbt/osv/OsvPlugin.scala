@@ -35,15 +35,15 @@ object OsvPlugin extends AutoPlugin {
 
   override def projectSettings: Seq[Def.Setting[?]] = Seq(
     osvSkip := false,
-    osvScan := osvTask.evaluated,
+    osvScan := Scan().evaluated,
     osvListSuppressions := ListSuppressions().evaluated,
+    osvListSettings := ScanSettings.listTask().evaluated,
     Compile / resourceGenerators += GenerateSuppressions.exportPackagedSuppressions(),
     osvOutputDirectory := crossTarget.value,
     osvScan / aggregate := false,
     osvListSuppressions / aggregate := false,
+    osvListSettings / aggregate := false,
     Global / concurrentRestrictions += Tags.exclusive(NonParallel)
   )
-
-  private def osvTask: Def.Initialize[InputTask[Unit]] = Scan()
 
 }

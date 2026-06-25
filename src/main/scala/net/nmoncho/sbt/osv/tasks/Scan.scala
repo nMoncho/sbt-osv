@@ -12,30 +12,15 @@ import scala.util.Success
 import scala.util.Try
 
 import net.nmoncho.sbt.osv.Keys._
-import net.nmoncho.sbt.osv.settings.EngineSettings
-import net.nmoncho.sbt.osv.settings.ReportGenerator
-import net.nmoncho.sbt.osv.settings.ScopesSettings
 import net.nmoncho.sbt.osv.settings.SummaryReport
 import sbt.Keys._
 import sbt._
 import sbt.complete.Parser
-import sbt.plugins.JvmPlugin
 
 object Scan {
 
   private[tasks] val argumentsParser: Parser[Seq[ParseOptions]] =
     (ListSettingsArg | SingleReportArg | AllProjectsArg | ListUnusedSuppressionsArg | OriginalSummaryArg | AllVulnerabilitiesSummaryArg | OffendingVulnerabilitiesSummaryArg).*
-
-  private[tasks] case class CheckSettings(
-      name: String,
-      scopes: ScopesSettings,
-      failureScore: Double,
-      engineSettings: EngineSettings,
-      dependencies: Set[Attributed[File]],
-      suppressions: Set[SuppressionRule],
-      outputDirectory: File,
-      reportFormats: Seq[ReportGenerator]
-  )
 
   def apply(): Def.Initialize[InputTask[Unit]] = Def
     .inputTaskDyn {
@@ -61,9 +46,9 @@ object Scan {
 
       val dependenciesAndSuppressionsTask = Def.taskDyn {
         if (singleReport && allProjects) {
-          allProjectsSettings.map(Seq(_))
+          ScanSettings.allProjectsSettings.map(Seq(_))
         } else if (!singleReport) {
-          aggregateProjectsFilter.map(_.flatten)
+          ScanSettings.aggregateProjectsFilter.map(_.flatten)
         } else {
           sys.error("'all-projects' argument isn't supported without the use of 'single-project'")
         }
@@ -80,8 +65,7 @@ object Scan {
               val settings = checkSettings.engineSettings
 
               if (arguments.contains(ParseOptions.ListSettings)) {
-                log.info(s"\nOsvScan settings for [${checkSettings.name}]:")
-                ListSettings(checkSettings)
+                ScanSettings(checkSettings)
               }
 
               withEngine(settings) { engine =>
@@ -120,44 +104,6 @@ object Scan {
       }
     }
     .tag(NonParallel)
-
-  private lazy val allProjectsSettings: Def.Initialize[Task[CheckSettings]] = Def.task {
-    CheckSettings(
-      name.value,
-      osvScopes.value,
-      osvFailBuildOnCVSS.value,
-      osvEngineSettings.value,
-      AllProjectsScan.dependencies().value,
-      AllProjectsScan.suppressions().value,
-      osvOutputDirectory.value,
-      osvReportFormats.value
-    )
-  }
-
-  private lazy val aggregateProjectsFilter = Def.settingDyn {
-    perProjectSettingsTask.all(ScopeFilter(inAggregates(thisProjectRef.value)))
-  }
-
-  private lazy val perProjectSettingsTask: Def.Initialize[Task[Seq[CheckSettings]]] =
-    Def.taskDyn {
-      if (!thisProject.value.autoPlugins.contains(JvmPlugin) || (osvSkip ?? false).value)
-        Def.task(Seq.empty[CheckSettings])
-      else
-        Def.task(
-          Seq(
-            CheckSettings(
-              name.value,
-              osvScopes.value,
-              osvFailBuildOnCVSS.value,
-              osvEngineSettings.value,
-              Dependencies.projectDependencies.value,
-              GenerateSuppressions.forProject.value,
-              osvOutputDirectory.value,
-              osvReportFormats.value
-            )
-          )
-        )
-    }
 
   private def logUnusedSuppression(projectName: String, unusedSuppressions: Set[SuppressionRule])(
       implicit log: Logger
