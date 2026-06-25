@@ -5,6 +5,7 @@ addSbtPlugin("com.timushev.sbt"        % "sbt-updates"    % "0.7.0")
 addSbtPlugin("com.github.sbt"          % "sbt-ci-release" % "1.11.2")
 addSbtPlugin("ch.epfl.scala"           % "sbt-scalafix"   % "0.14.6")
 addSbtPlugin("org.playframework.twirl" % "sbt-twirl"      % "2.0.9")
+addSbtPlugin("com.eed3si9n"            % "sbt-salad-days" % "0.2.0")
 
 libraryDependencies ++= Seq(
   "org.scala-sbt" %% "scripted-plugin" % sbtVersion.value
