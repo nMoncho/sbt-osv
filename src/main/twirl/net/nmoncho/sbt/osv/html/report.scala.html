@@ -564,7 +564,7 @@
               <ul class="references-list">
                 @for(ref <- refs) {
                 <li>
-                  <span class="ref-type @ref.`type`">@ref.`type`</span>
+                  <span class="ref-type @ref.typeAsString">@ref.typeAsString</span>
                   <a href="@ref.url" target="_blank" rel="noopener noreferrer">@ref.url</a>
                 </li>
                 }

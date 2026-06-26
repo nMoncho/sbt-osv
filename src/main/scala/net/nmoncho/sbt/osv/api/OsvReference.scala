@@ -17,7 +17,9 @@ import SnakeCaseConfig.{ ReadWriter => RW }
 case class OsvReference(
     `type`: OsvReferenceType,
     url: String
-)
+) {
+  def typeAsString: String = `type`.toString
+}
 
 object OsvReference {
   implicit val rw: RW[OsvReference] = macroRW
