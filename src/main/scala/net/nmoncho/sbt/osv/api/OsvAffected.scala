@@ -6,8 +6,8 @@
 
 package net.nmoncho.sbt.osv.api
 
-import SnakeCaseConfig.macroRW
-import SnakeCaseConfig.{ ReadWriter => RW }
+import net.nmoncho.sbt.osv.api.SnakeCaseConfig.macroRW
+import net.nmoncho.sbt.osv.api.SnakeCaseConfig.{ReadWriter => RW}
 
 /** Affected versions and commits.
   *
@@ -21,7 +21,18 @@ case class OsvAffected(
     ranges: Option[Seq[OsvRange]]      = None,
     versions: Option[Seq[String]]      = None,
     severity: Option[Seq[OsvSeverity]] = None
-)
+) {
+
+  def findFixed: Option[String] = ranges
+    .map { rs =>
+      (for {
+        range <- rs
+        event <- range.events
+        fixed <- event.fixed
+      } yield fixed).headOption
+    }
+    .getOrElse(None)
+}
 
 object OsvAffected {
   implicit val rw: RW[OsvAffected] = macroRW

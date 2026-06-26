@@ -255,6 +255,7 @@
 
     .meta-chip.date  { background: #f6f8fa; border-color: #e1e4e8; color: #57606a; }
     .meta-chip.alias { background: #fff5b1; border-color: #f9c513; color: #735c0f; }
+    .meta-chip.fix { background: #dcffe4; border-color: #10b981; color: #1a7f37; }
 
     /* ── Severity pills ───────────────────────────────────── */
     .severity-list {
@@ -511,6 +512,9 @@
           }
           @for(aliasList <- vuln.aliases.toSeq; alias <- aliasList) {
           <span class="meta-chip alias">@alias</span>
+          }
+          @vuln.findFixed.map { v =>
+          <span class="meta-chip fix">Fixed on: @v</span>
           }
         </div>
 
