@@ -19,25 +19,49 @@ package object v1 {
   implicit val instantReadWriter: ReadWriter[Instant] =
     readwriter[String].bimap(_.toString, Instant.parse)
 
-  // TODO handle pagination
-
   class Client private (baseUrl: String) {
 
     /** Queries the vulnerabilities for a given package
       *
       * See also <a href="https://google.github.io/osv.dev/post-v1-query/">docs</a>
       *
+      * This method handles pagination
+      *
       * @param q query to run against API
       * @return either the vulnerability list, which can be empty, or a failed result
       */
-    def query(q: V1Query)(implicit log: Logger): Either[RpcStatus, V1VulnerabilityList] =
-      handleResponse[V1VulnerabilityList](
-        requests.post(
-          url   = s"${baseUrl}/v1/query",
-          data  = write(q),
-          check = false
-        )
-      )
+    def query(q: V1Query)(implicit log: Logger): Either[RpcStatus, V1VulnerabilityList] = {
+      def inner(
+          query: V1Query,
+          vulns: Vector[OsvVulnerability]
+      ): Either[RpcStatus, Vector[OsvVulnerability]] =
+        handleResponse[V1VulnerabilityList](
+          requests.post(
+            url   = s"${baseUrl}/v1/query",
+            data  = write(q),
+            check = false
+          )
+        ) match {
+          // No more vulnerabilities, this case shouldn't happen though
+          case Right(V1VulnerabilityList(None, None)) =>
+            Right(Vector.empty)
+
+          // No more pages
+          case Right(V1VulnerabilityList(values, nextToken)) =>
+            val updateVulns = vulns ++ values.getOrElse(Vector.empty)
+            nextToken.fold[Either[RpcStatus, Vector[OsvVulnerability]]](Right(updateVulns)) { token =>
+              inner(query.copy(pageToken = Some(token)), updateVulns)
+            }
+
+          case Left(value) =>
+            Left(value)
+        }
+
+      inner(q, Vector.empty) match {
+        case Right(vulns) => Right(V1VulnerabilityList(Some(vulns)))
+        case Left(error) => Left(error)
+      }
+    }
 
     /** Queries the vulnerabilities for several packages
       *
