@@ -30,6 +30,18 @@ object SummaryReport {
 
   private final val NewLine = System.getProperty("line.separator", "\n").intern()
 
+  private implicit val ordering: Ordering[Vulnerability] = (x: Vulnerability, y: Vulnerability) => {
+    val xScore = x.scores.max
+    val yScore = y.scores.max
+    val comp   = Vulnerability.Score.ordering.compare(xScore, yScore)
+
+    if (comp == 0) {
+      x.id.compareTo(y.id)
+    } else {
+      comp
+    }
+  }
+
   /** Shows the summary to the console
     *
     * @param name          project name
@@ -63,7 +75,8 @@ object SummaryReport {
     * @return vulnerability report line
     */
   private def processVulnerability(v: Vulnerability, failCvssScore: Double): String = {
-    val score = v.scores.map(s => s"${s.name} ${s.score}").mkString("(", ", ", ")")
+    val score =
+      v.scores.toSeq.sortBy(_.name).map(s => s"${s.name} ${s.score}").mkString("(", ", ", ")")
 
     if (failingVulnerability(v, failCvssScore)) {
       s"${scala.Console.YELLOW}${v.id}${scala.Console.RESET} ${scala.Console.YELLOW}${score})${scala.Console.RESET}"
@@ -86,9 +99,7 @@ object SummaryReport {
   ): Unit =
     analysisResult.foreach { case (dependency, vulnerabilities) =>
       if (vulnerabilities.nonEmpty) {
-        // TODO sort vulnerability by score in descending order so most critical are first
-
-        val formattedVulnerabilities = vulnerabilities.collect {
+        val formattedVulnerabilities = vulnerabilities.toSeq.sorted.collect {
           case v if reportVulnerability(v, failCvssScore) =>
             processVulnerability(v, failCvssScore)
         }
