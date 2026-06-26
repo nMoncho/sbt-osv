@@ -1,7 +1,18 @@
-# sbt-osv
+# sbt-osv (Open Source Vulnerabilities)
 
 An sbt plugin that scans your project's dependencies against the [OSV (Open Source Vulnerabilities)](https://osv.dev) database and
 reports known vulnerabilities.
+
+This is the sister project to [`sbt-dependency-check`](https://github.com/nMoncho/sbt-dependency-check)
+offering similar features (we hope to bring feature parity). This project differs a bit from its sister
+in the following aspects:
+- Doesn't depend on [NVD database](https://nvd.nist.gov/) directly, but on OSV's API (which also aggregates NVD
+  information).
+- Has more precise vulnerability search, meaning less [false positives](https://dependency-check.github.io/DependencyCheck/general/suppression.html)
+  on the analysis report.
+- Only supports dependencies from the Maven ecosystem, for now. Whereas DependencyCheck, and in turn `sbt-dependency-check`
+  support [way more ecosystems](https://dependency-check.github.io/DependencyCheck/analyzers/index.html).
+- By having a simpler design, analysis may be faster than its sister project.
 
 ## Installation
 
