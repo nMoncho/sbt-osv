@@ -15,16 +15,11 @@ import sbt.Logger
 
 package object osv {
 
-  def logFailure(t: Throwable)(implicit log: Logger): Unit = t match {
-    case e: VulnerabilityFoundException =>
-      log.error(s"${e.getLocalizedMessage}")
-      logThrowable(e)
-
-    case e =>
-      log.error(s"Failed creating report: ${e.getLocalizedMessage}")
-      logThrowable(e)
-  }
-
+  /** Logs a [[Throwable]] with the corresponding stacktrace
+    *
+    * @param t throwable to log
+    * @param log logger
+    */
   def logThrowable(t: Throwable)(implicit log: Logger): Unit =
     // We have to log the full StackTraces here, since SBT doesn't use `printStackTrace`
     // when logging exceptions.

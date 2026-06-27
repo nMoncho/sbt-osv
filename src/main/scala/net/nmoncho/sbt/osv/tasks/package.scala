@@ -71,8 +71,14 @@ package object tasks {
     try {
       fn(engine)
     } catch {
+      case NonFatal(e: VulnerabilityFoundException) =>
+        log.error(s"${e.getLocalizedMessage}")
+        logThrowable(e)
+        throw e
+
       case NonFatal(e) =>
-        logFailure(e)
+        log.error(s"Failed running OSV scan: ${e.getLocalizedMessage}")
+        logThrowable(e)
         throw e
     } finally {
       engine.close()
