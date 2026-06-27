@@ -174,9 +174,8 @@ package object tasks {
       name: String,
       summaryReport: SummaryReport
   )(implicit log: Logger): Unit = {
-    val hasFailingVulnerabilities = scanResult.vulnerabilities.exists {
-      case (dep, vulnerabilities) =>
-        vulnerabilities.exists(failingVulnerability(_, failCvssScore))
+    val hasFailingVulnerabilities = scanResult.vulnerabilities.exists { case (_, vulnerabilities) =>
+      vulnerabilities.exists(_.failing(failCvssScore))
     }
 
     if (hasFailingVulnerabilities) {

@@ -36,7 +36,4 @@ package object osv {
       log.error(sw.toString)
     }
 
-  def failingVulnerability(v: Vulnerability, failCvssScore: Double): Boolean =
-    v.scores.exists(_.score > failCvssScore)
-
 }

@@ -44,11 +44,11 @@ object SummaryReport {
 
   /** Shows the summary to the console
     *
-    * @param name          project name
-    * @param dependencies  scanned dependencies
-    * @param failCvssScore failing CVSS Score
-    * @param report        report type
-    * @param log           logger
+    * @param name           project name
+    * @param analysisResult scanned dependencies
+    * @param failCvssScore  failing CVSS Score
+    * @param report         report type
+    * @param log            logger
     */
   def showSummary(
       name: String,
@@ -61,7 +61,7 @@ object SummaryReport {
     val summary = report.buildSummary(analysisResult, failCvssScore)
 
     log.warn(
-      s"\n\nOne or more dependencies were identified with known vulnerabilities in [$name]:\n\n${summary}" +
+      s"\n\nOne or more dependencies were identified with known vulnerabilities in [$name]:\n\n$summary" +
         "\n\nSee the OSV report for more details.\n\n"
     )
   }
@@ -78,16 +78,16 @@ object SummaryReport {
     val score =
       v.scores.toSeq.sortBy(_.name).map(s => s"${s.name} ${s.score}").mkString("(", ", ", ")")
 
-    if (failingVulnerability(v, failCvssScore)) {
-      s"${scala.Console.YELLOW}${v.id}${scala.Console.RESET} ${scala.Console.YELLOW}${score})${scala.Console.RESET}"
+    if (v.failing(failCvssScore)) {
+      s"${scala.Console.YELLOW}${v.id}${scala.Console.RESET} ${scala.Console.YELLOW}$score)${scala.Console.RESET}"
     } else {
-      s"${v.id} ${score}"
+      s"${v.id} $score"
     }
   }
 
   /** Processes dependencies to be included in the report
     *
-    * @param dependencies        scanned dependencies
+    * @param analysisResult      scanned dependencies
     * @param reportVulnerability predicate to define if a [[Vulnerability]] should be shown or not in the summary
     * @param summary             [[StringBuilder]] used for aggregating the report
     */
@@ -188,7 +188,7 @@ object SummaryReport {
 
       dependencyProcessor(
         analysisResult,
-        failingVulnerability,
+        _.failing(_),
         failCvssScore,
         summary
       )

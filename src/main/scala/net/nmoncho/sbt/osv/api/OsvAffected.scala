@@ -7,7 +7,7 @@
 package net.nmoncho.sbt.osv.api
 
 import net.nmoncho.sbt.osv.api.SnakeCaseConfig.macroRW
-import net.nmoncho.sbt.osv.api.SnakeCaseConfig.{ReadWriter => RW}
+import net.nmoncho.sbt.osv.api.SnakeCaseConfig.{ ReadWriter => RW }
 
 /** Affected versions and commits.
   *
