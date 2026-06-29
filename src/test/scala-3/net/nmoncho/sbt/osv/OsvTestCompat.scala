@@ -8,6 +8,7 @@ package net.nmoncho.sbt.osv
 
 import sbt.Classpaths
 import sbt.ModuleID
+import sbt.internal.util.Attributed
 import sbt.internal.util.StringAttributeKey
 
 object OsvTestCompat {
@@ -15,4 +16,7 @@ object OsvTestCompat {
     Map(
       sbt.Keys.moduleIDStr -> Classpaths.moduleIdJsonKeyFormat.write(module)
     )
+
+  def makeAttributed(module: ModuleID, file: java.io.File): Attributed[java.io.File] =
+    Attributed.blank(file).put(sbt.Keys.moduleIDStr, Classpaths.moduleIdJsonKeyFormat.write(module))
 }
