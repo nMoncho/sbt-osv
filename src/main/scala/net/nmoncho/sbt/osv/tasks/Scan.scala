@@ -50,7 +50,7 @@ object Scan {
         } else if (!singleReport) {
           ScanSettings.aggregateProjectsFilter.map(_.flatten)
         } else {
-          sys.error("'all-projects' argument isn't supported without the use of 'single-project'")
+          sys.error("'single-reports' argument isn't supported without the use of 'all-projects'")
         }
       }
 
