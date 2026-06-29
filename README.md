@@ -34,6 +34,9 @@ Runs the dependency vulnerability scan and generates a report.
 sbt osvScan [arguments...]
 ```
 
+Note: when arguments are provided the whole command has to be wrapped in single quotes for SBT to properly parse it.
+See examples.
+
 | Argument                            | Description                                                                                                 |
 |-------------------------------------|-------------------------------------------------------------------------------------------------------------|
 | `single-report`                     | Produce one combined report for all aggregated sub-projects instead of one report per project.              |
@@ -51,10 +54,10 @@ sbt osvScan [arguments...]
 sbt osvScan
 
 # Single combined report, listing any unused suppressions
-sbt osvScan single-report list-unused-suppressions
+sbt 'osvScan all-projects single-report list-unused-suppressions'
 
 # Scan with a summary that shows only failing vulnerabilities
-sbt osvScan offending-vulnerabilities-summary
+sbt 'osvScan offending-vulnerabilities-summary'
 ```
 
 ### `osvListSuppressions`
@@ -76,7 +79,7 @@ sbt osvListSuppressions [argument]
 
 ```
 sbt osvListSuppressions
-sbt osvListSuppressions all-projects
+sbt 'osvListSuppressions all-projects'
 ```
 
 
