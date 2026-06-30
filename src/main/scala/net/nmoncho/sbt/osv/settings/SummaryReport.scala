@@ -33,7 +33,7 @@ object SummaryReport {
   private implicit val ordering: Ordering[Vulnerability] = (x: Vulnerability, y: Vulnerability) => {
     val xScore = x.scores.max
     val yScore = y.scores.max
-    val comp   = Vulnerability.Score.ordering.compare(xScore, yScore)
+    val comp   = Vulnerability.Score.descendingOrder.compare(xScore, yScore)
 
     if (comp == 0) {
       x.id.compareTo(y.id)
@@ -96,13 +96,13 @@ object SummaryReport {
       reportVulnerability: (Vulnerability, Double) => Boolean,
       failCvssScore: Double,
       summary: StringBuilder
-  ): Unit = {
+  )(implicit ord: Ordering[Double]): Unit = {
     // Sort dependencies by vulnerability's score in descending order
     // So dependency with the highest vulnerability shows first
     val inDescendingOrder = analysisResult.toSeq
       .sortBy { case (_, vulnerabilities) =>
         vulnerabilities.map(_.scores.max).headOption.map(_.score).getOrElse(0.0)
-      }(implicitly[Ordering[Double]].reverse)
+      }(ord.reverse)
 
     inDescendingOrder
       .foreach { case (dependency, vulnerabilities) =>

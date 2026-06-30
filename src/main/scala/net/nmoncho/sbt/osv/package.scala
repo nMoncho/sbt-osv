@@ -15,7 +15,7 @@ import sbt.Logger
 
 package object osv {
 
-  /** Logs a [[Throwable]] with the corresponding stacktrace
+  /** Logs a [[Throwable]] with its stacktrace
     *
     * @param t throwable to log
     * @param log logger

@@ -18,28 +18,73 @@ import net.nmoncho.sbt.osv.storage.VulnerabilityRepository
 import sbt.Logger
 import sbt.io.IO
 
+/** Dependency Scanner */
 trait Engine {
 
+  /** Analyze dependencies for vulnerabilities
+    *
+    * @param failCvssScore fail CVSS score (inclusive)
+    * @param dependencies dependencies to scan
+    * @param suppressions suppressions to include
+    * @return scan result
+    */
   def analyzeDependencies(
       failCvssScore: Double,
       dependencies: Set[Dependency],
       suppressions: Set[SuppressionRule]
   )(implicit log: Logger): Engine.ScanResult
 
+  /** Cleans up the scanner after use */
   def close(): Unit
 
-  def writeReports(projectName: String, outputDir: sbt.File, str: String): Unit
+  /** Writes a report to a given file
+    *
+    * @param projectName project name this report is for
+    * @param outputDir on what folder to write the report to
+    * @param report report as a string
+    */
+  def writeReports(projectName: String, outputDir: sbt.File, report: String): Unit
 
 }
 
 object Engine {
 
+  final val DefaultOsvDB = "osv.db"
+
+  def create(settings: EngineSettings): Engine = {
+    val dbFile = settings.dataDirectory match {
+      case Some(parent) if parent.exists() && parent.isDirectory =>
+        new File(parent, DefaultOsvDB)
+
+      case Some(value) => value
+
+      case None =>
+        EngineSettings.findDataDirectory()
+    }
+
+    new Default(
+      settings,
+      ConnectionProvider.h2InFile(dbFile)
+    )
+  }
+
+  /** Vulnerability scan result
+    *
+    * @param vulnerabilities detected vulnerabilities by its dependency
+    * @param suppressed suppressed vulnerabilities
+    * @param unusedSuppressions unused suppressions
+    */
   case class ScanResult(
       vulnerabilities: Map[Dependency, Set[Vulnerability]],
       suppressed: Set[Vulnerability],
       unusedSuppressions: Set[SuppressionRule]
   )
 
+  /** Default implementation for [[Engine]]
+    *
+    * @param settings engine settings
+    * @param db database connection provider to use for caching
+    */
   class Default(settings: EngineSettings, db: ConnectionProvider) extends Engine {
     private val client = Client(settings.baseUrl)
 
@@ -68,7 +113,7 @@ object Engine {
             toProcess -> (vulns + (d -> vs))
 
           case None =>
-            ((qs :+ q), (deps :+ d)) -> vulns
+            (qs :+ q, deps :+ d) -> vulns
         }
       }
 
@@ -140,12 +185,6 @@ object Engine {
       )
     }
 
-    override def close(): Unit =
-      db.close()
-
-    override def writeReports(projectName: String, outputDir: sbt.File, str: String): Unit =
-      IO.write(new File(outputDir, projectName), str)
-
     private def handleBatchResults(
         toProcess: Vector[(Dependency, V1BatchVulnerabilityList.Value)]
     )(implicit log: Logger): Map[Dependency, Set[Vulnerability]] = {
@@ -172,22 +211,11 @@ object Engine {
           dep -> Set.empty[Vulnerability]
       }.toMap
     }
-  }
 
-  def create(settings: EngineSettings): Engine = {
-    val dbFile = settings.dataDirectory match {
-      case Some(parent) if parent.exists() && parent.isDirectory =>
-        new File(parent, "osv.db")
+    override def close(): Unit =
+      db.close()
 
-      case Some(value) => value
-
-      case None =>
-        EngineSettings.findDataDirectory()
-    }
-
-    new Default(
-      settings,
-      ConnectionProvider.h2InFile(dbFile)
-    )
+    override def writeReports(projectName: String, outputDir: sbt.File, report: String): Unit =
+      IO.write(new File(outputDir, projectName), report)
   }
 }
