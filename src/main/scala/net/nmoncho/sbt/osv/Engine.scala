@@ -7,6 +7,7 @@
 package net.nmoncho.sbt.osv
 
 import java.io.File
+import java.sql.Connection
 
 import net.nmoncho.sbt.osv.api.v1.Client
 import net.nmoncho.sbt.osv.api.v1.V1BatchQuery
@@ -63,8 +64,13 @@ object Engine {
     }
 
     new Default(
-      settings,
-      ConnectionProvider.h2InFile(dbFile)
+      settings           = settings,
+      client             = Client(settings.baseUrl),
+      db                 = ConnectionProvider.h2InFile(dbFile),
+      repositoryProvider = connection => {
+        ConnectionProvider.createSchema(connection)
+        VulnerabilityRepository.jdbc(connection)
+      }
     )
   }
 
@@ -85,15 +91,14 @@ object Engine {
     * @param settings engine settings
     * @param db database connection provider to use for caching
     */
-  class Default(settings: EngineSettings, db: ConnectionProvider) extends Engine {
-    private val client = Client(settings.baseUrl)
+  class Default(
+      settings: EngineSettings,
+      client: Client,
+      db: ConnectionProvider,
+      repositoryProvider: Connection => VulnerabilityRepository
+  ) extends Engine {
 
-    private lazy val repository = {
-      val connection = db.connection()
-      ConnectionProvider.createSchema(connection)
-
-      VulnerabilityRepository.jdbc(connection)
-    }
+    private lazy val repository = repositoryProvider(db.connection())
 
     override def analyzeDependencies(
         failCvssScore: Double,
@@ -117,15 +122,19 @@ object Engine {
         }
       }
 
-      val vulnerabilitiesInAPI = client.queryBatch(V1BatchQuery(queries)) match {
-        case Right(V1BatchVulnerabilityList(Some(result))) =>
-          handleBatchResults(toQuery.zip(result))
+      val vulnerabilitiesInAPI = if (queries.nonEmpty) {
+        client.queryBatch(V1BatchQuery(queries)) match {
+          case Right(V1BatchVulnerabilityList(Some(result))) =>
+            handleBatchResults(toQuery.zip(result))
 
-        case Right(V1BatchVulnerabilityList(None)) =>
-          Map.empty[Dependency, Set[Vulnerability]]
+          case Right(V1BatchVulnerabilityList(None)) =>
+            Map.empty[Dependency, Set[Vulnerability]]
 
-        case Left(value) =>
-          throw new IllegalStateException(s"Failed to query OSV API. Cause: ${value.toString}")
+          case Left(value) =>
+            throw new IllegalStateException(s"Failed to query OSV API. Cause: ${value.toString}")
+        }
+      } else {
+        Map.empty
       }
 
       processDependencies(
