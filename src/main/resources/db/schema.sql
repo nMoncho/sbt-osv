@@ -61,13 +61,18 @@ CREATE TABLE IF NOT EXISTS osv_severity (
     vulnerability_id VARCHAR(255),
     affected_id      BIGINT,
     type             VARCHAR(50),
-    score            VARCHAR(100),
+    score            VARCHAR(500),
     CONSTRAINT pk_osv_severity PRIMARY KEY (id),
     CONSTRAINT fk_severity_vuln FOREIGN KEY (vulnerability_id)
         REFERENCES osv_vulnerability (id) ON DELETE CASCADE,
     CONSTRAINT fk_severity_affected FOREIGN KEY (affected_id)
         REFERENCES osv_affected (id) ON DELETE CASCADE
 );
+
+-- Widens score for pre-existing DBs created before this column was VARCHAR(500);
+-- a no-op on fresh DBs and on repeated runs, since setting a column to its
+-- current size/type is a no-op in H2.
+ALTER TABLE osv_severity ALTER COLUMN score SET DATA TYPE VARCHAR(500);
 
 CREATE TABLE IF NOT EXISTS osv_range (
     id          SERIAL       NOT NULL,
