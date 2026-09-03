@@ -18,7 +18,7 @@ jobs:
           distribution: 'temurin'
           cache: 'sbt'
 
-      - uses: sbt/setup-sbt@v1.5.4
+      - uses: sbt/setup-sbt@v1.5.8
       - run: sbt ci-release
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
