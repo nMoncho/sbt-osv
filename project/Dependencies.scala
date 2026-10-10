@@ -2,7 +2,7 @@ import sbt.*
 
 object Dependencies {
   lazy val cvssCalculator  = "us.springett"             % "cvss-calculator"   % "1.5.1"
-  lazy val commonmark      = "org.commonmark"           % "commonmark"        % "0.30.0"
+  lazy val commonmark      = "org.commonmark"           % "commonmark"        % "0.30.1"
   lazy val packageUrlJava  = "com.github.package-url"   % "packageurl-java"   % "1.5.0"
   lazy val requests        = "com.lihaoyi"             %% "requests"          % "0.9.3"
   lazy val uPickle         = "com.lihaoyi"             %% "upickle"           % "4.4.3"
