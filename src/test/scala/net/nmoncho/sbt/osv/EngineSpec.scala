@@ -15,6 +15,7 @@ import net.nmoncho.sbt.osv.api.RpcStatus
 import net.nmoncho.sbt.osv.api.v1.Client
 import net.nmoncho.sbt.osv.api.v1.V1BatchQuery
 import net.nmoncho.sbt.osv.api.v1.V1BatchVulnerabilityList
+import net.nmoncho.sbt.osv.api.v1.V1Query
 import net.nmoncho.sbt.osv.api.v1.V1VulnerabilityList
 import net.nmoncho.sbt.osv.settings.EngineSettings
 import net.nmoncho.sbt.osv.storage.ConnectionProvider
@@ -73,6 +74,33 @@ class EngineSpec extends munit.FunSuite {
     engine.analyzeDependencies(0.0, Set(dep), Set.empty)
 
     verifyNoInteractions(client)
+  }
+
+  test("dependencies without vulnerabilities should be cached as empty") {
+    val client       = mock(classOf[Client])
+    val dbProvider   = ConnectionProvider.h2InMemory()
+    val repo         = mock(classOf[VulnerabilityRepository])
+    val repoProvider = (_: Connection) => repo
+
+    // Cache miss, then OSV reports no vulnerabilities for the dependency
+    when(repo.findCached(any(), any())).thenReturn(None)
+    when(client.queryBatch(any())(any())).thenReturn(
+      Right(V1BatchVulnerabilityList(Some(Vector(V1BatchVulnerabilityList.Value(None)))))
+    )
+
+    val engine = new Engine.Default(
+      EngineSettings.Default,
+      client,
+      dbProvider,
+      repoProvider
+    )
+
+    val dep = Dependency("org.foo", "bar", "1.0.0", new File("foo.jar"))
+
+    engine.analyzeDependencies(0.0, Set(dep), Set.empty)
+
+    // Next run hits the cache instead of querying OSV again
+    verify(repo, times(1)).cache(V1Query.of(dep), Seq.empty)
   }
 
   // -------------------------------------------------------------------------

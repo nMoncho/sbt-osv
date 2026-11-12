@@ -353,6 +353,8 @@ object Engine {
 
         // dependency has no found vulnerabilities
         case (dep, Value(None, _)) =>
+          // prevent cache-miss if dep doesn't have vulnerabilities
+          cache(V1Query.of(dep), Seq.empty)
           dep -> Set.empty[Vulnerability]
       }.toMap
     }
