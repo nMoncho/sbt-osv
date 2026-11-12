@@ -1,0 +1,15 @@
+# No suppressions: nothing unused, build passes
+> osvScan fail-on-unused-suppressions
+
+# Only a used suppression: build passes
+> set osvSuppressions := Suppressions.onlyUsed
+> osvScan fail-on-unused-suppressions
+
+# An unused suppression without the flag: build passes
+> set osvSuppressions := Suppressions.usedAndUnused
+> osvScan
+> osvScan list-unused-suppressions
+
+# An unused suppression with the flag: build fails
+-> osvScan fail-on-unused-suppressions
+-> osvScan list-unused-suppressions fail-on-unused-suppressions

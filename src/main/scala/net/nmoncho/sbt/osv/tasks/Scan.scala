@@ -20,16 +20,17 @@ import sbt.complete.Parser
 object Scan {
 
   private[tasks] val argumentsParser: Parser[Seq[ParseOptions]] =
-    (ListSettingsArg | SingleReportArg | AllProjectsArg | ListUnusedSuppressionsArg | OriginalSummaryArg | AllVulnerabilitiesSummaryArg | OffendingVulnerabilitiesSummaryArg).*
+    (ListSettingsArg | SingleReportArg | AllProjectsArg | ListUnusedSuppressionsArg | FailOnUnusedSuppressionsArg | OriginalSummaryArg | AllVulnerabilitiesSummaryArg | OffendingVulnerabilitiesSummaryArg).*
 
   def apply(): Def.Initialize[InputTask[Unit]] = Def
     .inputTaskDyn {
       implicit val log: Logger = streams.value.log
 
-      val arguments              = argumentsParser.parsed
-      val singleReport           = arguments.contains(ParseOptions.SingleReport)
-      val allProjects            = arguments.contains(ParseOptions.AllProjects)
-      val listUnusedSuppressions = arguments.contains(ParseOptions.ListUnusedSuppressions)
+      val arguments                = argumentsParser.parsed
+      val singleReport             = arguments.contains(ParseOptions.SingleReport)
+      val allProjects              = arguments.contains(ParseOptions.AllProjects)
+      val listUnusedSuppressions   = arguments.contains(ParseOptions.ListUnusedSuppressions)
+      val failOnUnusedSuppressions = arguments.contains(ParseOptions.FailOnUnusedSuppressions)
 
       val summary = arguments.find(arg =>
         arg == ParseOptions.OriginalSummary || arg == ParseOptions.AllVulnerabilitiesSummary || arg == ParseOptions.OffendingVulnerabilitiesSummary
@@ -81,16 +82,22 @@ object Scan {
                     summary
                   )
                 } match {
-                  case Success(result) if listUnusedSuppressions =>
-                    logUnusedSuppression(checkSettings.name, result.unusedSuppressions)
-
                   case Failure(found: VulnerabilityFoundException) if listUnusedSuppressions =>
                     logUnusedSuppression(checkSettings.name, found.scanResult.unusedSuppressions)
                     throw found
 
                   case Failure(t) => throw t
 
-                  case Success(_) =>
+                  case Success(result) =>
+                    if (listUnusedSuppressions || failOnUnusedSuppressions) {
+                      logUnusedSuppression(checkSettings.name, result.unusedSuppressions)
+                    }
+                    if (failOnUnusedSuppressions && result.unusedSuppressions.nonEmpty) {
+                      throw new RuntimeException(
+                        s"Unused suppressions [${result.unusedSuppressions}] were found in analysis"
+                      )
+                    }
+
                     // Findings were already reported by `analyzeProject`; nothing to add.
                     ()
                 }

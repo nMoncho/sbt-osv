@@ -33,6 +33,7 @@ package object tasks {
     case object SingleReport extends ParseOptions
     case object AllProjects extends ParseOptions
     case object ListUnusedSuppressions extends ParseOptions
+    case object FailOnUnusedSuppressions extends ParseOptions
 
     case object OriginalSummary extends ParseOptions
     case object AllVulnerabilitiesSummary extends ParseOptions
@@ -50,6 +51,8 @@ package object tasks {
     (Space ~> token("all-projects")) ^^^ ParseOptions.AllProjects
   private[tasks] val ListUnusedSuppressionsArg =
     (Space ~> token("list-unused-suppressions")) ^^^ ParseOptions.ListUnusedSuppressions
+  private[tasks] val FailOnUnusedSuppressionsArg =
+    (Space ~> token("fail-on-unused-suppressions")) ^^^ ParseOptions.FailOnUnusedSuppressions
 
   private[tasks] val OriginalSummaryArg =
     (Space ~> token("original-summary")) ^^^ ParseOptions.OriginalSummary
