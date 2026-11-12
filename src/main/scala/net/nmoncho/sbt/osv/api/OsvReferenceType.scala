@@ -18,6 +18,7 @@ object OsvReferenceType {
   case object PACKAGE extends OsvReferenceType
   case object ARTICLE extends OsvReferenceType
   case object EVIDENCE extends OsvReferenceType
+  case class OTHER(raw: String) extends OsvReferenceType
 
   def fromString(s: String): OsvReferenceType = s match {
     case "NONE" => NONE
@@ -28,7 +29,7 @@ object OsvReferenceType {
     case "PACKAGE" => PACKAGE
     case "ARTICLE" => ARTICLE
     case "EVIDENCE" => EVIDENCE
-    case other => throw new IllegalArgumentException(s"Unknown OsvReferenceType: $other")
+    case other => OTHER(other)
   }
 
   implicit val rw: RW[OsvReferenceType] = SnakeCaseConfig

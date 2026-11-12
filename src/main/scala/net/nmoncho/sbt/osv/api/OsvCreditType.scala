@@ -21,6 +21,7 @@ object OsvCreditType {
   case object REMEDIATION_VERIFIER extends OsvCreditType
   case object TOOL extends OsvCreditType
   case object SPONSOR extends OsvCreditType
+  case class OTHER(raw: String) extends OsvCreditType
 
   def fromString(s: String): OsvCreditType = s match {
     case "UNSPECIFIED" => UNSPECIFIED
@@ -34,7 +35,7 @@ object OsvCreditType {
     case "REMEDIATION_VERIFIER" => REMEDIATION_VERIFIER
     case "TOOL" => TOOL
     case "SPONSOR" => SPONSOR
-    case other => throw new IllegalArgumentException(s"Unknown OsvCreditType: $other")
+    case other => OTHER(other)
   }
 
   implicit val rw: RW[OsvCreditType] = SnakeCaseConfig

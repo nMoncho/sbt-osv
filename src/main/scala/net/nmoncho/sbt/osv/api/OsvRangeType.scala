@@ -16,13 +16,14 @@ object OsvRangeType {
   case object GIT extends OsvRangeType
   case object SEMVER extends OsvRangeType
   case object ECOSYSTEM extends OsvRangeType
+  case class OTHER(raw: String) extends OsvRangeType
 
   def fromString(s: String): OsvRangeType = s match {
     case "UNSPECIFIED" => UNSPECIFIED
     case "GIT" => GIT
     case "SEMVER" => SEMVER
     case "ECOSYSTEM" => ECOSYSTEM
-    case other => throw new IllegalArgumentException(s"Unknown OsvRangeType: $other")
+    case other => OTHER(other)
   }
 
   implicit val rw: RW[OsvRangeType] = SnakeCaseConfig
