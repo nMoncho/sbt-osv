@@ -62,7 +62,7 @@ object SummaryReport {
       v.scores.toSeq.sortBy(_.name).map(s => s"${s.name} ${s.score}").mkString("(", ", ", ")")
 
     if (v.failing(failCvssScore)) {
-      s"${scala.Console.YELLOW}${v.id}${scala.Console.RESET} ${scala.Console.YELLOW}$score)${scala.Console.RESET}"
+      s"${scala.Console.YELLOW}${v.id}${scala.Console.RESET} ${scala.Console.YELLOW}$score${scala.Console.RESET}"
     } else {
       s"${v.id} $score"
     }
