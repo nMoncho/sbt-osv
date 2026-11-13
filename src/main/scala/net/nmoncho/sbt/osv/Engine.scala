@@ -55,6 +55,9 @@ trait Engine {
     */
   def writeReports(projectName: String, outputDir: sbt.File, report: String): Unit
 
+  /** Purges any cache this implementation may be using
+    */
+  def purgeCache()(implicit log: Logger): Unit = ()
 }
 
 object Engine {
@@ -378,5 +381,10 @@ object Engine {
 
     override def writeReports(projectName: String, outputDir: sbt.File, report: String): Unit =
       IO.write(new File(outputDir, projectName), report)
+
+    override def purgeCache()(implicit log: Logger): Unit = {
+      log.info("Purging OSV cache")
+      repository().foreach(_.purge())
+    }
   }
 }

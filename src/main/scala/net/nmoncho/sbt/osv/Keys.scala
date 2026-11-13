@@ -61,4 +61,7 @@ object Keys {
   lazy val osvListSuppressions: InputKey[Unit] = inputKey(
     "Lists the active suppression rules for each project, both those defined in the project (build.sbt or .osvignore) and those imported from packaged suppressions."
   )
+  lazy val osvPurgeCache: TaskKey[Unit] = taskKey(
+    "Purges the OSV vulnerability database (ie. evicts the cache)"
+  )
 }

@@ -38,11 +38,13 @@ object OsvPlugin extends AutoPlugin {
     osvScan := Scan().evaluated,
     osvListSuppressions := ListSuppressions().evaluated,
     osvListSettings := ScanSettings.listTask().evaluated,
+    osvPurgeCache := Purge.apply.value,
     Compile / resourceGenerators += GenerateSuppressions.exportPackagedSuppressions(),
     osvOutputDirectory := crossTarget.value,
     osvScan / aggregate := false,
     osvListSuppressions / aggregate := false,
     osvListSettings / aggregate := false,
+    osvPurgeCache / aggregate := false,
     Global / concurrentRestrictions += Tags.exclusive(NonParallel)
   )
 

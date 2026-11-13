@@ -101,6 +101,14 @@ sbt osvListSettings [argument]
 
 The same information can be printed as part of a scan with `sbt 'osvScan list-settings'`.
 
+### `osvPurgeCache`
+
+Purges the OSV database with all cached queries and vulnerabilities (i.e. evicts the cache)
+
+```
+sbt osvPurgeCache
+```
+
 
 ## Settings
 

@@ -1,0 +1,18 @@
+# Scan populates the isolated cache
+> osvScan
+$ exists osv-cache/osv.db.mv.db
+> assertCached
+-> assertPurged
+
+# Purge empties it
+> osvPurgeCache
+> assertPurged
+-> assertCached
+
+# Next scan repopulates it
+> osvScan
+> assertCached
+
+# A second purge must run again, not replay a cached result
+> osvPurgeCache
+> assertPurged

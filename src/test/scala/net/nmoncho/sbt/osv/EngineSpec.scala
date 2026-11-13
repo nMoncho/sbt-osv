@@ -405,4 +405,97 @@ class EngineSpec extends munit.FunSuite {
     assertEquals(batchSizes.sum, 1500, "every dependency should be queried exactly once")
   }
 
+  // -------------------------------------------------------------------------
+  // Purging the cache evicts every entry
+  // -------------------------------------------------------------------------
+
+  test("purging the cache forces the next scan to query the OSV API") {
+    val client = mock(classOf[Client])
+    when(client.queryBatch(any())(any())).thenReturn(
+      Right(V1BatchVulnerabilityList(Some(Vector(V1BatchVulnerabilityList.Value(None)))))
+    )
+
+    // Private, unnamed in-memory H2: never touches the user's osv.db nor other tests' DBs
+    val db           = ConnectionProvider.h2InMemory()
+    val repoProvider = (conn: Connection) => {
+      ConnectionProvider.createSchema(conn)
+      VulnerabilityRepository.jdbc(conn)
+    }
+    val engine = new Engine.Default(EngineSettings.Default, client, db, repoProvider)
+
+    try {
+      // Scan, purge, scan: both scans must reach the API
+      engine.analyzeDependencies(0.0, Set(dbDep), Set.empty)
+      engine.purgeCache()
+      engine.analyzeDependencies(0.0, Set(dbDep), Set.empty)
+
+      verify(client, times(2)).queryBatch(any())(any())
+    } finally {
+      engine.close()
+    }
+  }
+
+  test("a purge after a scan is persisted to the database file") {
+    val client = mock(classOf[Client])
+    when(client.queryBatch(any())(any())).thenReturn(
+      Right(V1BatchVulnerabilityList(Some(Vector(V1BatchVulnerabilityList.Value(None)))))
+    )
+
+    // Throwaway file DB: never touches the user's osv.db nor other tests' DBs
+    val dir          = java.nio.file.Files.createTempDirectory("osv-purge-spec").toFile
+    val dbFile       = new File(dir, Engine.DefaultOsvDB)
+    val repoProvider = (conn: Connection) => {
+      ConnectionProvider.createSchema(conn)
+      VulnerabilityRepository.jdbc(conn)
+    }
+    def engine() =
+      new Engine.Default(
+        EngineSettings.Default,
+        client,
+        ConnectionProvider.h2InFile(dbFile),
+        repoProvider
+      )
+
+    try {
+      // Scan then purge on the same connection, then close
+      val first = engine()
+      first.analyzeDependencies(0.0, Set(dbDep), Set.empty)
+      first.purgeCache()
+      first.close()
+
+      // A fresh engine must not find the purged entry
+      val second = engine()
+      second.analyzeDependencies(0.0, Set(dbDep), Set.empty)
+      second.close()
+
+      verify(client, times(2)).queryBatch(any())(any())
+    } finally {
+      sbt.io.IO.delete(dir)
+    }
+  }
+
+  test("without purging, the next scan is served from the cache") {
+    val client = mock(classOf[Client])
+    when(client.queryBatch(any())(any())).thenReturn(
+      Right(V1BatchVulnerabilityList(Some(Vector(V1BatchVulnerabilityList.Value(None)))))
+    )
+
+    val db           = ConnectionProvider.h2InMemory()
+    val repoProvider = (conn: Connection) => {
+      ConnectionProvider.createSchema(conn)
+      VulnerabilityRepository.jdbc(conn)
+    }
+    val engine = new Engine.Default(EngineSettings.Default, client, db, repoProvider)
+
+    try {
+      // Control for the purge test: proves the cache is actually populated
+      engine.analyzeDependencies(0.0, Set(dbDep), Set.empty)
+      engine.analyzeDependencies(0.0, Set(dbDep), Set.empty)
+
+      verify(client, times(1)).queryBatch(any())(any())
+    } finally {
+      engine.close()
+    }
+  }
+
 }
