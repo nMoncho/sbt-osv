@@ -42,6 +42,7 @@ See examples.
 | `single-report`                     | Produce one combined report for all aggregated sub-projects instead of one report per project.              |
 | `all-projects`                      | When used together with `single-report`, gathers dependencies from all projects into a single analysis.     |
 | `list-settings`                     | Print the effective `osvScan` settings before running the scan.                                             |
+| `show-suppressed`                   | Prints any suppressed vulnerabilities.                                                                      |
 | `list-unused-suppressions`          | After the scan completes, log any suppression rules that did not match any found vulnerability.             |
 | `fail-on-unused-suppressions`       | Fails the build if unused suppressions where found after the scan.                                          |
 | `original-summary`                  | Use the DependencyCheck-style summary format (default): lists dependency coordinates and vulnerability IDs. |

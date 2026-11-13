@@ -32,6 +32,7 @@ package object tasks {
     case object ListSettings extends ParseOptions
     case object SingleReport extends ParseOptions
     case object AllProjects extends ParseOptions
+    case object ShowSuppressed extends ParseOptions
     case object ListUnusedSuppressions extends ParseOptions
     case object FailOnUnusedSuppressions extends ParseOptions
 
@@ -49,6 +50,8 @@ package object tasks {
     (Space ~> token("single-report")) ^^^ ParseOptions.SingleReport
   private[tasks] val AllProjectsArg =
     (Space ~> token("all-projects")) ^^^ ParseOptions.AllProjects
+  private[tasks] val ShowSuppressedArg =
+    (Space ~> token("show-suppressed")) ^^^ ParseOptions.ShowSuppressed
   private[tasks] val ListUnusedSuppressionsArg =
     (Space ~> token("list-unused-suppressions")) ^^^ ParseOptions.ListUnusedSuppressions
   private[tasks] val FailOnUnusedSuppressionsArg =

@@ -12,6 +12,7 @@ import scala.util.Success
 import scala.util.Try
 
 import net.nmoncho.sbt.osv.Keys._
+import net.nmoncho.sbt.osv.Vulnerability.Score
 import net.nmoncho.sbt.osv.settings.SummaryReport
 import sbt.Keys._
 import sbt._
@@ -20,7 +21,7 @@ import sbt.complete.Parser
 object Scan {
 
   private[tasks] val argumentsParser: Parser[Seq[ParseOptions]] =
-    (ListSettingsArg | SingleReportArg | AllProjectsArg | ListUnusedSuppressionsArg | FailOnUnusedSuppressionsArg | OriginalSummaryArg | AllVulnerabilitiesSummaryArg | OffendingVulnerabilitiesSummaryArg).*
+    (ListSettingsArg | SingleReportArg | AllProjectsArg | ShowSuppressedArg | ListUnusedSuppressionsArg | FailOnUnusedSuppressionsArg | OriginalSummaryArg | AllVulnerabilitiesSummaryArg | OffendingVulnerabilitiesSummaryArg).*
 
   def apply(): Def.Initialize[InputTask[Unit]] = Def
     .inputTaskDyn {
@@ -29,6 +30,7 @@ object Scan {
       val arguments                = argumentsParser.parsed
       val singleReport             = arguments.contains(ParseOptions.SingleReport)
       val allProjects              = arguments.contains(ParseOptions.AllProjects)
+      val showSuppressed           = arguments.contains(ParseOptions.ShowSuppressed)
       val listUnusedSuppressions   = arguments.contains(ParseOptions.ListUnusedSuppressions)
       val failOnUnusedSuppressions = arguments.contains(ParseOptions.FailOnUnusedSuppressions)
 
@@ -82,8 +84,13 @@ object Scan {
                     summary
                   )
                 } match {
-                  case Failure(found: VulnerabilityFoundException) if listUnusedSuppressions =>
-                    logUnusedSuppression(checkSettings.name, found.scanResult.unusedSuppressions)
+                  case Failure(found: VulnerabilityFoundException) =>
+                    if (listUnusedSuppressions) {
+                      logUnusedSuppression(checkSettings.name, found.scanResult.unusedSuppressions)
+                    }
+                    if (showSuppressed) {
+                      showSuppressions(checkSettings.name, found.scanResult.suppressed)
+                    }
                     throw found
 
                   case Failure(t) => throw t
@@ -91,6 +98,9 @@ object Scan {
                   case Success(result) =>
                     if (listUnusedSuppressions || failOnUnusedSuppressions) {
                       logUnusedSuppression(checkSettings.name, result.unusedSuppressions)
+                    }
+                    if (showSuppressed) {
+                      showSuppressions(checkSettings.name, result.suppressed)
                     }
                     if (failOnUnusedSuppressions && result.unusedSuppressions.nonEmpty) {
                       throw new RuntimeException(
@@ -117,13 +127,34 @@ object Scan {
       implicit log: Logger
   ): Unit =
     if (unusedSuppressions.nonEmpty) {
-      log.info(s"""
-                  |
-                  |Found [${unusedSuppressions.size}] unused suppressions for project [${projectName}]:
-                  |${unusedSuppressions.mkString("\n\t", "\n\t", "\n")}
-                  |
-                  |""".stripMargin)
+      log.info(
+        s"""
+          |
+          |Found [${unusedSuppressions.size}] unused suppressions for project [${projectName}]:
+          |${unusedSuppressions.mkString("\n\t", "\n\t", "\n")}
+          |
+          |""".stripMargin
+      )
     } else {
       log.info("No unused suppressions.")
+    }
+
+  private def showSuppressions(projectName: String, suppressed: Set[Vulnerability])(
+      implicit log: Logger
+  ): Unit =
+    if (suppressed.nonEmpty) {
+      log.info(
+        s"""
+           |Suppressed vulnerabilities for project [${projectName}]:
+           |${suppressed.toSeq
+            .sortBy(_.id)
+            .map { s =>
+              s"${s.id} (a.k.a. ${s.aliases.toSeq.sorted.mkString(", ")}). Score: ${s.scores.toSeq.sorted(Score.descendingOrder).mkString(", ")}"
+            }
+            .mkString("\n\t", "\n\t", "\n")}
+           |""".stripMargin
+      )
+    } else {
+      log.info("No suppressed vulnerabilities")
     }
 }

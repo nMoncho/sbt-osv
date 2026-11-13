@@ -1,0 +1,11 @@
+# No suppressions: logs none, build passes
+> osvScan show-suppressed
+
+# A used suppression: logs it, build passes
+> set osvSuppressions := Suppressions.one
+> osvScan show-suppressed
+> osvScan show-suppressed list-unused-suppressions
+
+# Vulnerabilities still exceed the threshold: build fails
+> set osvFailBuildOnCVSS := 0.0
+-> osvScan show-suppressed
