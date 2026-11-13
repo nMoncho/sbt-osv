@@ -531,8 +531,11 @@
           @for(aliasList <- vuln.source.aliases.toSeq; alias <- aliasList) {
           <span class="meta-chip alias">@alias</span>
           }
-          @vuln.source.findFixed.map { v =>
+          @vuln.fixed match {
+            case net.nmoncho.sbt.osv.Vulnerability.FixedStatus.Fixed(v) => {
           <span class="meta-chip fix">Fixed on: @v</span>
+            }
+            case _ => {}
           }
         </div>
 

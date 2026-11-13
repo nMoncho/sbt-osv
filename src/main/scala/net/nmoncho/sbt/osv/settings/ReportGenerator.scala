@@ -56,6 +56,10 @@ object ReportGenerator {
                   "id" -> ujson.Str(vulnerability.id),
                   "aliases" -> ujson.Arr(vulnerability.aliases.toSeq.sorted.map(ujson.Str(_)): _*),
                   "summary" -> ujson.Str(vulnerability.source.summary),
+                  "fixStatus" -> (vulnerability.fixed match {
+                    case Vulnerability.FixedStatus.Fixed(value) => ujson.Str(value)
+                    case _ => ujson.Null
+                  }),
                   "scores" -> ujson.Arr(
                     vulnerability.scores.toSeq.sortBy(_.name).map { score =>
                       ujson.Obj(
@@ -184,13 +188,21 @@ object ReportGenerator {
           vulnerability.aliases.toSeq.sorted.mkString(" (", ", ", ")")
         else ""
 
-      ujson.Obj(
+      // SARIF has no field for a fixed version: `fixes` needs file edits. Put it in
+      // the message (shown by code scanning UIs) and the property bag (for tools).
+      val fixedVersion = vulnerability.fixed match {
+        case Vulnerability.FixedStatus.Fixed(version) => Some(version)
+        case _ => None
+      }
+      val fixedText = fixedVersion.fold("")(version => s". Fixed in $version")
+
+      val result = ujson.Obj(
         "ruleId" -> ujson.Str(vulnerability.id),
         "ruleIndex" -> ujson.Num(index.toDouble),
         "level" -> ujson.Str(levelFor(vulnerability)),
         "message" -> ujson.Obj(
           "text" -> ujson.Str(
-            s"${dependency.coordinates} is affected by ${vulnerability.id}$aliasText"
+            s"${dependency.coordinates} is affected by ${vulnerability.id}$aliasText$fixedText"
           )
         ),
         "locations" -> ujson.Arr(
@@ -210,6 +222,12 @@ object ReportGenerator {
           "packageVulnerability" -> ujson.Str(s"${dependency.purl}/${vulnerability.id}")
         )
       )
+
+      fixedVersion.foreach(version =>
+        result("properties") = ujson.Obj("fixedVersion" -> ujson.Str(version))
+      )
+
+      result
     }
   }
 

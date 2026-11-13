@@ -7,6 +7,8 @@
 package net.nmoncho.sbt.osv
 package settings
 
+import net.nmoncho.sbt.osv.Vulnerability.FixedStatus
+
 /** Trait used to define how Summaries are generated after an analysis
   */
 trait SummaryReport {
@@ -61,10 +63,15 @@ object SummaryReport {
     val score =
       v.scores.toSeq.sortBy(_.name).map(s => s"${s.name} ${s.score}").mkString("(", ", ", ")")
 
+    val fixed = v.fixed match {
+      case FixedStatus.Fixed(value) => s"Fixed in $value"
+      case _ => ""
+    }
+
     if (v.failing(failCvssScore)) {
-      s"${scala.Console.YELLOW}${v.id}${scala.Console.RESET} ${scala.Console.YELLOW}$score${scala.Console.RESET}"
+      s"${scala.Console.YELLOW}${v.id}${scala.Console.RESET} ${scala.Console.YELLOW}$score. $fixed${scala.Console.RESET}"
     } else {
-      s"${v.id} $score"
+      s"${v.id} $score. $fixed"
     }
   }
 

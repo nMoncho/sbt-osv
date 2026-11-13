@@ -207,7 +207,7 @@ object Engine {
 
         findCached(q) match {
           case Some(inDB) =>
-            val vs = inDB.map(_.toVulnerability()).toSet
+            val vs = inDB.map(_.toVulnerability(d)).toSet
             toProcess -> (vulns + (d -> vs))
 
           case None =>
@@ -363,7 +363,7 @@ object Engine {
           client.query(query) match {
             case Right(value) =>
               cache(query, value.vulns.getOrElse(Seq.empty))
-              dep -> value.vulnerabilities()
+              dep -> value.vulnerabilities(dep)
 
             case Left(value) =>
               apiUnavailable(value)

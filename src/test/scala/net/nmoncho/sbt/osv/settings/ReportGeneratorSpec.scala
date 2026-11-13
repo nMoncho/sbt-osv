@@ -133,6 +133,33 @@ class ReportGeneratorSpec extends munit.FunSuite with TestUtils {
     )
   }
 
+  test("SARIF result carries the fixed version in message and properties") {
+    val dep    = Dependency("org.example", "lib", "1.2.3", new File("lib-1.2.3.jar"))
+    val source = OsvVulnerability("GHSA-fix", "1.0.0", "a summary", "details", Seq.empty)
+    val fixed  = Vulnerability(
+      "GHSA-fix",
+      Set.empty,
+      Set.empty,
+      Vulnerability.FixedStatus.Fixed("1.2.4"),
+      source
+    )
+    val unresolved = fixed.copy(id = "GHSA-open", fixed = Vulnerability.FixedStatus.NotFixed)
+
+    val results = ujson
+      .read(
+        ReportGenerator.SARIF.generate(Map(dep -> Set(fixed, unresolved)))
+      )("runs")(0)("results")
+      .arr
+
+    val withFix = results.find(_("ruleId").str == "GHSA-fix").get
+    assert(withFix("message")("text").str.endsWith("Fixed in 1.2.4"))
+    assertEquals(withFix("properties")("fixedVersion").str, "1.2.4")
+
+    val withoutFix = results.find(_("ruleId").str == "GHSA-open").get
+    assert(!withoutFix("message")("text").str.contains("Fixed in"))
+    assert(!withoutFix.obj.contains("properties"))
+  }
+
   test("SARIF deduplicates a shared advisory into one rule with a result per dependency") {
     val depA   = Dependency("org.a", "a", "1.0", new File("a-1.0.jar"))
     val depB   = Dependency("org.b", "b", "2.0", new File("b-2.0.jar"))
@@ -176,7 +203,7 @@ class ReportGeneratorSpec extends munit.FunSuite with TestUtils {
           x.getLines().mkString("\n")
         }.get
 
-        d -> read[V1VulnerabilityList](jsonText).vulnerabilities()
+        d -> read[V1VulnerabilityList](jsonText).vulnerabilities(d)
       }
       .toMap
   }

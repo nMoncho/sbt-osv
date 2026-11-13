@@ -30,9 +30,9 @@ class ScanResultSpec extends munit.FunSuite {
 
   test("sortBySeverity – most severe dependency first") {
     val input = Map(
-      dep("low")  -> Set(vuln("L", 2.0)),
+      dep("low") -> Set(vuln("L", 2.0)),
       dep("high") -> Set(vuln("H", 9.0)),
-      dep("mid")  -> Set(vuln("M", 5.0))
+      dep("mid") -> Set(vuln("M", 5.0))
     )
 
     assertEquals(depOrder(input), Seq("high", "mid", "low"))
@@ -42,7 +42,7 @@ class ScanResultSpec extends munit.FunSuite {
     // "mixed" has a 9.8 next to a 1.0; it must outrank "steady" (max 6.0).
     val input = Map(
       dep("steady") -> Set(vuln("S", 6.0)),
-      dep("mixed")  -> Set(vuln("A", 1.0), vuln("B", 9.8))
+      dep("mixed") -> Set(vuln("A", 1.0), vuln("B", 9.8))
     )
 
     assertEquals(depOrder(input), Seq("mixed", "steady"))
@@ -60,7 +60,7 @@ class ScanResultSpec extends munit.FunSuite {
   test("sortBySeverity – unscored dependencies go last") {
     val input = Map(
       dep("unscored") -> Set(vuln("U")),
-      dep("scored")   -> Set(vuln("S", 3.0))
+      dep("scored") -> Set(vuln("S", 3.0))
     )
 
     assertEquals(depOrder(input), Seq("scored", "unscored"))

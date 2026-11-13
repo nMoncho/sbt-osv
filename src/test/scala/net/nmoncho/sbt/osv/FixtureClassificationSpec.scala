@@ -26,8 +26,15 @@ class FixtureClassificationSpec extends munit.FunSuite {
   private def classify(fixtureFileName: String): Set[Vulnerability] = {
     val file = new File(s"src/test/resources/queries/$fixtureFileName")
     val text = Using(Source.fromFile(file))(_.getLines().mkString("\n")).get
-    read[V1VulnerabilityList](text).vulnerabilities()
+    read[V1VulnerabilityList](text).vulnerabilities(dependencyOf(file))
   }
+
+  // Fixture names encode coordinates, e.g. "org.scala-lang_scala-library_2.13.1.json"
+  private def dependencyOf(file: File): Dependency =
+    file.getName.replace(".json", "").split("_").toList match {
+      case List(org, art, ver) => Dependency(org, art, ver, file)
+      case _ => fail(s"invalid filename for [${file.getName}]")
+    }
 
   test("classifies the scala-library advisory with its CVSS score and severity bucket") {
     val vulnerabilities = classify("org.scala-lang_scala-library_2.13.1.json")
@@ -55,7 +62,7 @@ class FixtureClassificationSpec extends munit.FunSuite {
       .filter(_.getName.endsWith(".json"))
       .flatMap { file =>
         val text = Using(Source.fromFile(file))(_.getLines().mkString("\n")).get
-        read[V1VulnerabilityList](text).vulnerabilities()
+        read[V1VulnerabilityList](text).vulnerabilities(dependencyOf(file))
       }
 
     assert(all.nonEmpty, "fixtures should classify into vulnerabilities")
