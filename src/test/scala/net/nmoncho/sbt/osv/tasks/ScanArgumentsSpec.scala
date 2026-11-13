@@ -28,7 +28,10 @@ class ScanArgumentsSpec extends FunSuite {
   }
 
   test("show-suppressed is absent when not given") {
-    assertEquals(parse(" list-unused-suppressions"), Right(Seq(ParseOptions.ListUnusedSuppressions)))
+    assertEquals(
+      parse(" list-unused-suppressions"),
+      Right(Seq(ParseOptions.ListUnusedSuppressions))
+    )
   }
 
   test("misspelled show-suppressed is rejected") {

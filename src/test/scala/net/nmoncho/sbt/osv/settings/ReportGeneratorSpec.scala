@@ -12,6 +12,7 @@ import scala.io.Source
 import scala.util.Using
 
 import net.nmoncho.sbt.osv.Dependency
+import net.nmoncho.sbt.osv.Engine.ScanResult
 import net.nmoncho.sbt.osv.TestUtils
 import net.nmoncho.sbt.osv.Vulnerability
 import net.nmoncho.sbt.osv.api.OsvVulnerability
@@ -31,7 +32,7 @@ class ReportGeneratorSpec extends munit.FunSuite with TestUtils {
 
     sbt.IO.write(
       new File("report.html"),
-      net.nmoncho.sbt.osv.html.html.report(model).toString()
+      net.nmoncho.sbt.osv.html.html.report(ScanResult.sortBySeverity(result)).toString()
     )
   }
 

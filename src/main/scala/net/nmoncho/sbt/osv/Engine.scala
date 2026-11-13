@@ -107,6 +107,21 @@ object Engine {
       unusedSuppressions: Set[SuppressionRule]
   )
 
+  object ScanResult {
+    def sortBySeverity(
+        vulnerabilities: Map[Dependency, Set[Vulnerability]]
+    ): Seq[(Dependency, Seq[Vulnerability])] =
+      vulnerabilities.toSeq
+        .sortBy { case (_, vulns) =>
+          val scores = vulns.flatMap(_.scores)
+
+          if (scores.nonEmpty) scores.maxBy(_.score).score else 0.0
+        }(Ordering[Double].reverse)
+        .map { case (dep, vulns) =>
+          dep -> vulns.toSeq.sorted
+        }
+  }
+
   /** Default implementation for [[Engine]]
     *
     * @param settings engine settings

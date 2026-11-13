@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: MIT
  *@
 
-@(vulnerabilities: Map[net.nmoncho.sbt.osv.Dependency, Set[net.nmoncho.sbt.osv.api.OsvVulnerability]])
+@(vulnerabilities: Seq[(net.nmoncho.sbt.osv.Dependency, Seq[net.nmoncho.sbt.osv.Vulnerability])])
 
 @import java.time.Instant
 @import java.time.ZoneOffset
 @import java.time.format.DateTimeFormatter
 
 @defining(vulnerabilities.filter(_._2.nonEmpty)) { affected =>
-@defining(affected.values.map(_.size).sum) { totalVulns =>
+@defining(affected.map(_._2.size).sum) { totalVulns =>
 @defining(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss 'UTC'").withZone(ZoneOffset.UTC).format(Instant.now())) { generatedAt =>
 
 <!DOCTYPE html>
@@ -513,31 +513,31 @@
 
         <div class="vuln-card-header">
           <span class="vuln-id"><a href="https://osv.dev/vulnerability/@vuln.id" target="_blank">@vuln.id</a></span>
-          @vuln.withdrawn.map { w =>
+          @vuln.source.withdrawn.map { w =>
           <span class="withdrawn-badge">Withdrawn</span>
           }
         </div>
 
-        <div class="vuln-summary">@vuln.summary</div>
+        <div class="vuln-summary">@vuln.source.summary</div>
 
         @* ── Dates and aliases ── *@
         <div class="vuln-meta">
-          @vuln.published.map { p =>
+          @vuln.source.published.map { p =>
           <span class="meta-chip date">Published: @DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneOffset.UTC).format(p)</span>
           }
-          @vuln.modified.map { m =>
+          @vuln.source.modified.map { m =>
           <span class="meta-chip date">Modified: @DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneOffset.UTC).format(m)</span>
           }
-          @for(aliasList <- vuln.aliases.toSeq; alias <- aliasList) {
+          @for(aliasList <- vuln.source.aliases.toSeq; alias <- aliasList) {
           <span class="meta-chip alias">@alias</span>
           }
-          @vuln.findFixed.map { v =>
+          @vuln.source.findFixed.map { v =>
           <span class="meta-chip fix">Fixed on: @v</span>
           }
         </div>
 
         @* ── Severity ── *@
-        @vuln.severity.map { severities =>
+        @vuln.source.severity.map { severities =>
           @if(severities.nonEmpty) {
           <div class="severity-list">
             @for(sev <- severities) {
@@ -551,17 +551,17 @@
         }
 
         @* ── Details (collapsible if long) ── *@
-        @if(vuln.details.nonEmpty) {
+        @if(vuln.source.details.nonEmpty) {
         <details>
           <summary>Show details</summary>
           <div class="details-body">
-            <div class="vuln-details">@net.nmoncho.sbt.osv.html.MarkdownRenderer.render(vuln.details)</div>
+            <div class="vuln-details">@net.nmoncho.sbt.osv.html.MarkdownRenderer.render(vuln.source.details)</div>
           </div>
         </details>
         }
 
         @* ── Affected versions ── *@
-        @defining(vuln.affected.flatMap(_.versions.getOrElse(Seq.empty)).distinct.sorted) { affectedVersions =>
+        @defining(vuln.source.affected.flatMap(_.versions.getOrElse(Seq.empty)).distinct.sorted) { affectedVersions =>
           @if(affectedVersions.nonEmpty) {
           <details>
             <summary>Affected versions (@affectedVersions.size)</summary>
@@ -577,7 +577,7 @@
         }
 
         @* ── References ── *@
-        @vuln.references.map { refs =>
+        @vuln.source.references.map { refs =>
           @if(refs.nonEmpty) {
           <details>
             <summary>References (@refs.size)</summary>

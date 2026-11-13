@@ -7,8 +7,8 @@
 package net.nmoncho.sbt.osv.settings
 
 import net.nmoncho.sbt.osv.Dependency
+import net.nmoncho.sbt.osv.Engine.ScanResult
 import net.nmoncho.sbt.osv.Vulnerability
-import net.nmoncho.sbt.osv.api.OsvVulnerability
 
 sealed trait ReportGenerator {
 
@@ -30,13 +30,8 @@ object ReportGenerator {
 
     override def reportName(projectName: String): String = "osv-report.html"
 
-    override def generate(result: Map[Dependency, Set[Vulnerability]]): String = {
-      val model: Map[Dependency, Set[OsvVulnerability]] = result.map { case (d, vs) =>
-        d -> vs.map(_.source)
-      }
-
-      net.nmoncho.sbt.osv.html.html.report(model).toString()
-    }
+    override def generate(result: Map[Dependency, Set[Vulnerability]]): String =
+      net.nmoncho.sbt.osv.html.html.report(ScanResult.sortBySeverity(result)).toString()
   }
 
   /** Machine-readable JSON report, suitable for CI pipelines and downstream tooling. */
